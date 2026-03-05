@@ -1,50 +1,82 @@
-<div class="pay-container" style="text-align: center; padding: 50px;">
-    <h2>Gurukul Aashram Fee Payment</h2>
-    <input type="text" id="studentName" placeholder="Student Name" style="padding: 10px; margin: 10px; width: 250px;"><br>
-    <input type="number" id="feeAmount" placeholder="Enter Amount" style="padding: 10px; margin: 10px; width: 250px;"><br>
-    <button id="rzp-button1" style="padding: 15px 30px; background: #3228c5; color: white; border: none; cursor: pointer; font-weight: bold;">Pay Online</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay Fees - Gurukul Aashram</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .payment-card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #3228c5; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
+        button { width: 100%; padding: 12px; background: #3228c5; color: white; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #f4b41a; color: #3228c5; }
+        .back-link { display: block; margin-top: 15px; color: #666; font-size: 14px; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<div class="payment-card">
+    <h2>Online Fees Payment</h2>
+    <input type="text" id="studentName" placeholder="Student Full Name" required>
+    <input type="text" id="studentClass" placeholder="Class (e.g. 10th)" required>
+    <input type="number" id="feeAmount" placeholder="Enter Amount (₹)" required>
+    <button onclick="startPayment()">Pay Now</button>
+    <a href="index.html" class="back-link">← Back to Home</a>
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-document.getElementById('rzp-button1').onclick = async function(e){
-    const name = document.getElementById('studentName').value;
-    const amount = document.getElementById('feeAmount').value;
-    
-    if(!name || !amount) return alert("Naam aur Amount dono bhariye!");
+    function startPayment() {
+        const name = document.getElementById('studentName').value;
+        const amount = document.getElementById('feeAmount').value;
 
-    // 1. Order create karna
-    const res = await fetch('/create-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: amount })
-    });
-    const order = await res.json();
-
-    // 2. Razorpay Window kholna
-    var options = {
-        "key": "YOUR_KEY_ID", // Jab asli ID mile toh yahan daal dena
-        "amount": order.amount,
-        "currency": "INR",
-        "name": "Gurukul Aashram",
-        "order_id": order.id,
-        "handler": function (response){
-            // 3. Success hone par database mein save karna
-            fetch('/save-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    student_name: name,
-                    amount: amount,
-                    payment_id: response.razorpay_payment_id
-                })
-            }).then(() => {
-                alert("Payment Successful! Record saved.");
-                window.location.href = "index.html";
-            });
+        if (!name || !amount || amount <= 0) {
+            alert("Please enter valid name and amount!");
+            return;
         }
-    };
-    var rzp1 = new Razorpay(options);
-    rzp1.open();
-};
+
+        // Tumhari Key ID (Frontend ke liye)
+        const RAZORPAY_KEY = "rzp_test_SNWAKgO88lL2lq"; 
+
+        fetch('/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount: amount })
+        })
+        .then(res => res.json())
+        .then(order => {
+            var options = {
+                "key": RAZORPAY_KEY,
+                "amount": order.amount,
+                "currency": "INR",
+                "name": "Gurukul Aashram",
+                "description": "School Fees - " + name,
+                "order_id": order.id,
+                "handler": function (response) {
+                    // Payment successful hone par database mein save karna
+                    fetch('/save-payment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            student_name: name,
+                            amount: amount,
+                            payment_id: response.razorpay_payment_id
+                        })
+                    }).then(() => {
+                        alert("✅ ₹" + amount + " Paid Successfully! Payment ID: " + response.razorpay_payment_id);
+                        window.location.href = "index.html";
+                    });
+                },
+                "prefill": { "name": name },
+                "theme": { "color": "#3228c5" }
+            };
+            var rzp = new Razorpay(options);
+            rzp.open();
+        })
+        .catch(err => alert("❌ Error: " + err.message));
+    }
 </script>
+
+</body>
+</html>
