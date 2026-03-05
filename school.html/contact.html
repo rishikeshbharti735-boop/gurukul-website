@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Gurukul Aashram</title>
+    <style>
+        /* General Reset & Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        :root {
+            --primary-blue: #3228c5;
+            --accent-yellow: #f4b41a;
+            --white: #ffffff;
+            --text-gray: #666;
+        }
+
+        /* Top Bar & Header */
+        .top-bar { background-color: var(--primary-blue); color: var(--white); display: flex; justify-content: flex-end; padding: 5px 50px; font-size: 14px; }
+        .top-bar span { margin-left: 20px; padding: 5px 15px; cursor: pointer; }
+        .enroll-btn { background-color: var(--accent-yellow); color: var(--primary-blue); font-weight: bold; border-radius: 3px; }
+
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background-color: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .logo { font-size: 24px; font-weight: bold; color: var(--primary-blue); display: flex; align-items: center; }
+        nav ul { display: flex; gap: 20px; }
+        nav ul li a { font-weight: bold; font-size: 15px; color: var(--primary-blue); padding: 5px 10px; border-radius: 3px; }
+        nav ul li a:hover { color: var(--accent-yellow); }
+
+        /* Page Banner */
+        .page-banner {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .page-banner h1 { font-size: 36px; margin-bottom: 10px; color: var(--accent-yellow); }
+        .page-banner p { font-size: 18px; }
+
+        /* Contact Section Layout */
+        .contact-container {
+            display: flex;
+            gap: 40px;
+            padding: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        /* Left Side: Contact Info & Map */
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .contact-info h3 { color: var(--primary-blue); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--accent-yellow); padding-bottom: 10px; }
+        .info-item { margin-bottom: 20px; }
+        .info-item h4 { color: #444; margin-bottom: 5px; font-size: 16px; }
+        .info-item p { color: var(--text-gray); font-size: 15px; }
+        
+        /* Map Embed */
+        .map-container {
+            margin-top: 20px;
+            width: 100%;
+            height: 250px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #ddd;
+        }
+        .map-container iframe { width: 100%; height: 100%; border: none; }
+
+        /* Right Side: Contact Form */
+        .contact-form-box {
+            flex: 1;
+            min-width: 350px;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .contact-form-box h3 { color: var(--primary-blue); font-size: 24px; margin-bottom: 20px; border-bottom: 2px solid var(--accent-yellow); padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #444; font-size: 14px; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+        .submit-btn {
+            background-color: var(--accent-yellow);
+            color: var(--primary-blue);
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .submit-btn:hover { background-color: #dca010; color: #fff; }
+
+        /* Footer */
+        footer { background-color: var(--primary-blue); color: var(--white); padding: 40px 50px; display: flex; justify-content: space-between; margin-top: 20px; flex-wrap: wrap; gap: 20px; }
+        .footer-col h3 { margin-bottom: 15px; color: var(--accent-yellow); }
+        .footer-col p, .footer-col ul li { font-size: 14px; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+        <header>
+        <div class="logo">
+            <img src="image/logo.png" alt="Logo" style="height: 40px; margin-right: 15px;">
+            GURUKUL AASHRAM
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="admission.html">Admissions</a></li>
+                <li><a href="academics.html">Academics</a></li>
+                <li><a href="student-life.html">Student Life</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-banner">
+        <h1>Get in Touch</h1>
+        <p>We would love to hear from you. Feel free to reach out!</p>
+    </section>
+
+    <section class="contact-container">
+        
+        <div class="contact-info">
+            <h3>Contact Information</h3>
+            
+            <div class="info-item">
+                <h4>School Address:</h4>
+                <p>Makardahi, Ulao, Begusarai,<br>Bihar - 851134</p>
+            </div>
+            
+            <div class="info-item">
+                <h4>Phone Number:</h4>
+                <p>+91 XXXXXXXXXX</p>
+            </div>
+            
+            <div class="info-item">
+                <h4>Email Address:</h4>
+                <p>info@gurukulaashram.com</p>
+            </div>
+            
+            <div class="info-item">
+                <h4>Working Hours:</h4>
+                <p>Monday - Saturday: 8:00 AM to 3:00 PM</p>
+            </div>
+
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114946.85301815123!2d86.06456722830829!3d25.429983756816515!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f280a5e2f1712f%3A0x6b801de5de65a371!2sBegusarai%2C%20Bihar!5e0!3m2!1sen!2sin!4v1709560000000!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+
+        <div class="contact-form-box">
+            <h3>Send Us a Message</h3>
+            <form action="/submit-contact" method="POST">
+                
+                <div class="form-group">
+                    <label for="name">Your Name *</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your 10-digit mobile number" pattern="[0-9]{10}">
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">Subject *</label>
+                    <input type="text" id="subject" name="subject" placeholder="What is this regarding?" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Your Message *</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Write your message here..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+
+    </section>
+
+    <footer>
+        <div class="footer-col">
+            <h3>Gurukul Aashram</h3>
+            <p>Empowering the next generation.</p>
+        </div>
+        <div class="footer-col">
+            <h3>Address</h3>
+            <p>Makardahi, Ulao</p>
+            <p>Begusarai, Bihar - 851134</p>
+        </div>
+        <div class="footer-col">
+            <h3>Contact Us</h3>
+            <p>Phone: +91 XXXXXXXXXX</p>
+            <p>Email: info@gurukulaashram.com</p>
+        </div>
+        <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="#">Calendar</a></li>
+                <li><a href="admin.html">Admin Portal</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Careers</a></li>
+            </ul>
+        </div>
+    </footer>
+
+</body>
+</html>

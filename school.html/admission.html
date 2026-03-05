@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admissions - Gurukul Aashram</title>
+    <style>
+        /* General Reset & Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        :root {
+            --primary-blue: #3228c5;
+            --accent-yellow: #f4b41a;
+            --white: #ffffff;
+            --text-gray: #666;
+        }
+
+        /* Top Bar & Header */
+        .top-bar { background-color: var(--primary-blue); color: var(--white); display: flex; justify-content: flex-end; padding: 5px 50px; font-size: 14px; }
+        .top-bar span { margin-left: 20px; padding: 5px 15px; cursor: pointer; }
+        .enroll-btn { background-color: var(--accent-yellow); color: var(--primary-blue); font-weight: bold; border-radius: 3px; }
+
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background-color: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .logo { font-size: 24px; font-weight: bold; color: var(--primary-blue); display: flex; align-items: center; }
+        nav ul { display: flex; gap: 20px; }
+        nav ul li a { font-weight: bold; font-size: 15px; color: var(--primary-blue); padding: 5px 10px; border-radius: 3px; }
+        nav ul li a:hover { color: var(--accent-yellow); }
+        
+        /* Highlight for the current page */
+        .active-page { background-color: var(--accent-yellow) !important; color: var(--primary-blue) !important; }
+
+        /* Page Banner */
+        .page-banner {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .page-banner h1 { font-size: 36px; margin-bottom: 10px; color: var(--accent-yellow); }
+
+        /* Admission Section Layout */
+        .admission-container {
+            display: flex;
+            gap: 40px;
+            padding: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        /* Left Side: Information */
+        .admission-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        .admission-info h2 { color: var(--primary-blue); margin-bottom: 20px; font-size: 28px; }
+        .admission-info h3 { color: var(--accent-yellow); margin-top: 20px; margin-bottom: 10px; }
+        .admission-info p { margin-bottom: 15px; color: var(--text-gray); }
+        .admission-info ul { margin-left: 20px; list-style-type: disc; color: var(--text-gray); margin-bottom: 20px; }
+        .admission-info ul li { margin-bottom: 8px; }
+
+        /* Right Side: Application Form */
+        .admission-form-box {
+            flex: 1;
+            min-width: 350px;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .admission-form-box h3 { color: var(--primary-blue); margin-bottom: 20px; text-align: center; font-size: 24px; border-bottom: 2px solid var(--accent-yellow); padding-bottom: 10px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #444; font-size: 14px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+        .submit-btn {
+            background-color: var(--accent-yellow);
+            color: var(--primary-blue);
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .submit-btn:hover { background-color: #dca010; color: #fff; }
+
+        /* Footer */
+        footer { background-color: var(--primary-blue); color: var(--white); padding: 40px 50px; display: flex; justify-content: space-between; margin-top: 40px; flex-wrap: wrap; gap: 20px; }
+        .footer-col h3 { margin-bottom: 15px; color: var(--accent-yellow); }
+        .footer-col p, .footer-col ul li { font-size: 14px; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="image/logo.png" alt="Logo" style="height: 40px; margin-right: 15px;">
+            GURUKUL AASHRAM
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="admission.html" class="active-page">Admissions</a></li>
+                <li><a href="academics.html">Academics</a></li>
+                <li><a href="student-life.html">Student Life</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-banner">
+        <h1>Admissions 2024-2025</h1>
+        <p>Join the Gurukul Aashram Family</p>
+    </section>
+
+    <section class="admission-container">
+        
+        <div class="admission-info">
+            <h2>Admission Process</h2>
+            <p>Welcome to the admission portal of Gurukul Aashram. We are excited to have you join our vibrant learning community. Please read the instructions below carefully before filling out the application form.</p>
+            
+            <h3>Eligibility Criteria</h3>
+            <ul>
+                <li>Students must meet the age requirements for the respective class as per government guidelines.</li>
+                <li>Previous school's mark sheet and transfer certificate are required for admission from Class 2 onwards.</li>
+                <li>Admission is based on an entrance evaluation and an interview with the principal.</li>
+            </ul>
+
+            <h3>Documents Required</h3>
+            <ul>
+                <li>Passport size photographs of the student (4 copies).</li>
+                <li>Birth Certificate (Photocopy).</li>
+                <li>Aadhar Card of Student and Parents.</li>
+                <li>Previous year's report card.</li>
+                <li>Original Transfer Certificate (TC).</li>
+            </ul>
+
+            <h3>Contact for Admission Query</h3>
+            <p><strong>Phone:</strong> +91 XXXXXXXXXX</p>
+            <p><strong>Email:</strong> admission@gurukulaashram.com</p>
+            <p><strong>Timings:</strong> Monday to Saturday (9:00 AM - 2:00 PM)</p>
+        </div>
+
+        <div class="admission-form-box">
+            <h3>Online Registration Form</h3>
+            <form action="/submit-admission" method="POST">
+                
+                <div class="form-group">
+                    <label for="student_name">Student's Full Name *</label>
+                    <input type="text" id="student_name" name="student_name" placeholder="Enter student's name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dob">Date of Birth *</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="class_apply">Class Applied For *</label>
+                    <select id="class_apply" name="class_apply" required>
+                        <option value="">-- Select Class --</option>
+                        <option value="Nursery">Nursery</option>
+                        <option value="LKG">LKG</option>
+                        <option value="UKG">UKG</option>
+                        <option value="Class 1">Class 1</option>
+                        <option value="Class 2">Class 2</option>
+                        <option value="Class 3">Class 3</option>
+                        <option value="Class 4">Class 4</option>
+                        <option value="Class 5">Class 5</option>
+                        <option value="Class 6">Class 6</option>
+                        <option value="Class 7">Class 7</option>
+                        <option value="Class 8">Class 8</option>
+                        <option value="Class 9">Class 9</option>
+                        <option value="Class 10">Class 10</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="parent_name">Father's / Mother's Name *</label>
+                    <input type="text" id="parent_name" name="parent_name" placeholder="Enter parent's name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter 10-digit mobile number" required pattern="[0-9]{10}">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Residential Address *</label>
+                    <textarea id="address" name="address" rows="3" placeholder="Enter full address" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Application</button>
+            </form>
+        </div>
+
+    </section>
+
+    <footer>
+        <div class="footer-col">
+            <h3>Gurukul Aashram</h3>
+            <p>Empowering the next generation.</p>
+        </div>
+        <div class="footer-col">
+            <h3>Address</h3>
+            <p>Makardahi, Ulao</p>
+            <p>Begusarai, Bihar - 851134</p>
+        </div>
+        <div class="footer-col">
+            <h3>Contact Us</h3>
+            <p>Phone: +91 XXXXXXXXXX</p>
+            <p>Email: info@gurukulaashram.com</p>
+        </div>
+        <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="#">Calendar</a></li>
+                <li><a href="admin.html">Admin Portal</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Careers</a></li>
+            </ul>
+        </div>
+    </footer>
+
+</body>
+</html>

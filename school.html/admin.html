@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Gurukul Aashram</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #3228c5; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 30px; background: #fff; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3228c5; color: white; }
+        .del-btn { background: #ff4d4d; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
+        .del-btn:hover { background: #cc0000; }
+        .section-title { background: #f4b41a; padding: 12px; color: #3228c5; font-weight: bold; margin-top: 20px; border-radius: 4px; }
+        .logout-btn { background: #3228c5; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; float: right; font-weight: bold; }
+        
+        .box-style { padding: 20px; background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 30px; margin-top: 10px; }
+        textarea { width: 100%; height: 80px; padding: 10px; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 10px; font-family: inherit; box-sizing: border-box; resize: none; }
+        select, .link-input, .file-input { padding: 10px; border-radius: 4px; border: 1px solid #ccc; width: 48%; margin-bottom: 10px; }
+        .pub-btn { background: #28a745; color: white; border: none; padding: 10px 25px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        tr:nth-child(even) { background-color: #fefefe; }
+        .upload-btn { background: #ff4d4d; color: white; }
+        .t-img-preview { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    <h1>Gurukul Aashram - Admin Dashboard</h1>
+
+    <div class="section-title">Update School Notice Board</div>
+    <div class="box-style" style="background: #fff9e6; border-color: #f4b41a;">
+        <textarea id="noticeInput" placeholder="Yahan naya notice type karein..."></textarea>
+        <button class="pub-btn" onclick="updateNotice()">Publish Notice</button>
+    </div>
+
+    <div class="section-title">Add New Teacher (Faculty)</div>
+    <div class="box-style" style="background: #f0fff4; border-color: #28a745;">
+        <input type="text" id="tName" class="link-input" placeholder="Teacher Name">
+        <input type="text" id="tDesignation" class="link-input" placeholder="Designation (e.g. Science Teacher)">
+        <input type="text" id="tQual" class="link-input" placeholder="Qualification (e.g. B.Sc, B.Ed)">
+        <input type="file" id="tPhoto" class="file-input">
+        <button class="pub-btn" onclick="addTeacher()" style="background: #28a745;">Save Teacher</button>
+    </div>
+
+    <div class="section-title">Manage Study Materials (PDF Links)</div>
+    <div class="box-style" style="background: #eefbff; border-color: #3228c5;">
+        <select id="classSelect">
+            <option value="Nursery">Nursery</option>
+            <option value="L.K.G">L.K.G</option>
+            <option value="U.K.G">U.K.G</option>
+            <option value="Class 1">Class 1</option>
+            <option value="Class 10">Class 10</option>
+        </select>
+        <input type="text" id="materialLink" class="link-input" placeholder="Google Drive Link paste karein">
+        <button class="pub-btn" onclick="updateMaterial()" style="background: #3228c5;">Update Link</button>
+    </div>
+
+    <div class="section-title">Upload Photos to School Gallery</div>
+    <div class="box-style" style="background: #fff0f5; border-color: #ff4d4d;">
+        <input type="file" id="photoFile" class="file-input">
+        <input type="text" id="photoCaption" class="link-input" placeholder="Photo Caption">
+        <button class="pub-btn upload-btn" onclick="uploadPhoto()">Upload to Gallery</button>
+    </div>
+
+    <div class="section-title">Teachers List</div>
+    <table id="facultyTable">
+        <thead>
+            <tr><th>Photo</th><th>Name</th><th>Designation</th><th>Action</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="section-title">Fee Payment History</div>
+    <table id="paymentTable">
+        <thead>
+            <tr><th>Student Name</th><th>Amount (₹)</th><th>Transaction ID</th><th>Date</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="section-title">Recent Admissions</div>
+    <table id="admissionTable">
+        <thead>
+            <tr><th>Student Name</th><th>Class</th><th>Parent Name</th><th>Phone</th><th>Action</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <div class="section-title">Contact Messages</div>
+    <table id="contactTable">
+        <thead>
+            <tr><th>Name</th><th>Email</th><th>Message</th><th>Action</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+    if (sessionStorage.getItem('isAdmin') !== 'true') { window.location.href = 'login.html'; }
+
+    // --- NAYA: Add Teacher Function ---
+    async function addTeacher() {
+        const name = document.getElementById('tName').value;
+        const des = document.getElementById('tDesignation').value;
+        const qual = document.getElementById('tQual').value;
+        const fileInput = document.getElementById('tPhoto');
+
+        if(!name || fileInput.files.length === 0) return alert("Details aur Photo dono bhariye!");
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('designation', des);
+        formData.append('qualification', qual);
+        formData.append('teacherPhoto', fileInput.files[0]);
+
+        const res = await fetch('/add-faculty', { method: 'POST', body: formData });
+        const data = await res.json();
+        if(data.success) { alert("Teacher Added!"); location.reload(); }
+    }
+
+    // --- Photo Upload ---
+    async function uploadPhoto() {
+        const fileInput = document.getElementById('photoFile');
+        const caption = document.getElementById('photoCaption').value;
+        if(fileInput.files.length === 0) return alert("Photo select karein!");
+        const formData = new FormData();
+        formData.append('schoolPhoto', fileInput.files[0]);
+        formData.append('caption', caption);
+        const res = await fetch('/upload-photo', { method: 'POST', body: formData });
+        const data = await res.json();
+        if(data.success) { alert("Photo uploaded!"); location.reload(); }
+    }
+
+    // --- Updates ---
+    function updateNotice() {
+        const text = document.getElementById('noticeInput').value;
+        fetch('/update-notice', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({content: text}) }).then(() => alert("Notice Updated!"));
+    }
+
+    function updateMaterial() {
+        const className = document.getElementById('classSelect').value;
+        const link = document.getElementById('materialLink').value;
+        fetch('/update-material', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({className, link}) }).then(() => alert("Link Updated!"));
+    }
+
+    // --- Load Data ---
+    function loadEverything() {
+        fetch('/admin-data')
+            .then(res => res.json())
+            .then(data => {
+                const admBody = document.querySelector('#admissionTable tbody');
+                const conBody = document.querySelector('#contactTable tbody');
+                const payBody = document.querySelector('#paymentTable tbody');
+                const facBody = document.querySelector('#facultyTable tbody');
+                
+                admBody.innerHTML = ''; conBody.innerHTML = ''; payBody.innerHTML = ''; facBody.innerHTML = '';
+
+                data.faculty.forEach(t => {
+                    facBody.innerHTML += `<tr>
+                        <td><img src="${t.photo}" class="t-img-preview"></td>
+                        <td>${t.name}</td><td>${t.designation}</td>
+                        <td><button class="del-btn" onclick="deleteItem('${t._id}', 'faculty')">Delete</button></td>
+                    </tr>`;
+                });
+
+                data.admissions.forEach(adm => {
+                    admBody.innerHTML += `<tr><td>${adm.student_name}</td><td>${adm.class_apply}</td><td>${adm.parent_name}</td><td>${adm.phone}</td><td><button class="del-btn" onclick="deleteItem('${adm._id}', 'admission')">Delete</button></td></tr>`;
+                });
+
+                data.contacts.forEach(con => {
+                    conBody.innerHTML += `<tr><td>${con.name}</td><td>${con.email}</td><td>${con.message}</td><td><button class="del-btn" onclick="deleteItem('${con._id}', 'contact')">Delete</button></td></tr>`;
+                });
+
+                if(data.payments) {
+                    data.payments.forEach(pay => {
+                        payBody.innerHTML += `<tr><td>${pay.student_name || 'Anon'}</td><td>${pay.amount}</td><td><small>${pay.payment_id}</small></td><td>${new Date(pay.date).toLocaleDateString()}</td></tr>`;
+                    });
+                }
+            });
+
+        fetch('/get-notice').then(res => res.json()).then(data => { document.getElementById('noticeInput').value = data.content || ""; });
+    }
+
+    function deleteItem(id, type) {
+        if(confirm("Delete?")) { fetch(`/delete-${type}/${id}`, { method: 'DELETE' }).then(() => loadEverything()); }
+    }
+
+    function logout() { sessionStorage.removeItem('isAdmin'); window.location.href = 'login.html'; }
+
+    loadEverything();
+</script>
+</body>
+</html>

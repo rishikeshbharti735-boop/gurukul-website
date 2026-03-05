@@ -1,0 +1,50 @@
+<div class="pay-container" style="text-align: center; padding: 50px;">
+    <h2>Gurukul Aashram Fee Payment</h2>
+    <input type="text" id="studentName" placeholder="Student Name" style="padding: 10px; margin: 10px; width: 250px;"><br>
+    <input type="number" id="feeAmount" placeholder="Enter Amount" style="padding: 10px; margin: 10px; width: 250px;"><br>
+    <button id="rzp-button1" style="padding: 15px 30px; background: #3228c5; color: white; border: none; cursor: pointer; font-weight: bold;">Pay Online</button>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById('rzp-button1').onclick = async function(e){
+    const name = document.getElementById('studentName').value;
+    const amount = document.getElementById('feeAmount').value;
+    
+    if(!name || !amount) return alert("Naam aur Amount dono bhariye!");
+
+    // 1. Order create karna
+    const res = await fetch('/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: amount })
+    });
+    const order = await res.json();
+
+    // 2. Razorpay Window kholna
+    var options = {
+        "key": "YOUR_KEY_ID", // Jab asli ID mile toh yahan daal dena
+        "amount": order.amount,
+        "currency": "INR",
+        "name": "Gurukul Aashram",
+        "order_id": order.id,
+        "handler": function (response){
+            // 3. Success hone par database mein save karna
+            fetch('/save-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    student_name: name,
+                    amount: amount,
+                    payment_id: response.razorpay_payment_id
+                })
+            }).then(() => {
+                alert("Payment Successful! Record saved.");
+                window.location.href = "index.html";
+            });
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+};
+</script>

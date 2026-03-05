@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Gurukul Aashram</title>
+    <style>
+        /* General Reset & Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        :root {
+            --primary-blue: #3228c5;
+            --accent-yellow: #f4b41a;
+            --white: #ffffff;
+            --text-gray: #666;
+        }
+
+        /* Top Bar & Header */
+        .top-bar { background-color: var(--primary-blue); color: var(--white); display: flex; justify-content: flex-end; padding: 5px 50px; font-size: 14px; }
+        .top-bar span { margin-left: 20px; padding: 5px 15px; cursor: pointer; }
+        .enroll-btn { background-color: var(--accent-yellow); color: var(--primary-blue); font-weight: bold; border-radius: 3px; }
+
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background-color: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .logo { font-size: 24px; font-weight: bold; color: var(--primary-blue); display: flex; align-items: center; }
+        nav ul { display: flex; gap: 20px; }
+        nav ul li a { font-weight: bold; font-size: 15px; color: var(--primary-blue); padding: 5px 10px; border-radius: 3px; }
+        nav ul li a:hover { color: var(--accent-yellow); }
+
+        /* Page Banner */
+        .page-banner {
+            background: linear-gradient(rgba(50, 40, 197, 0.8), rgba(50, 40, 197, 0.8)), url('image/g1.jpeg') center/cover;
+            color: var(--white);
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .page-banner h1 { font-size: 40px; margin-bottom: 10px; color: var(--accent-yellow); }
+        .page-banner p { font-size: 18px; }
+
+        /* About Section Layout */
+        .about-container {
+            display: flex;
+            align-items: center;
+            padding: 60px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 40px;
+        }
+        .about-text { flex: 1; }
+        .about-text h2 { color: var(--primary-blue); font-size: 32px; margin-bottom: 20px; }
+        .about-text p { color: var(--text-gray); margin-bottom: 15px; font-size: 16px; text-align: justify; }
+        
+        .about-image {
+            flex: 1;
+            height: 350px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .about-image img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Mission & Vision Section */
+        .mission-vision {
+            display: flex;
+            gap: 30px;
+            padding: 0 50px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .mv-box {
+            flex: 1;
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            border-top: 4px solid var(--accent-yellow);
+        }
+        .mv-box h3 { color: var(--primary-blue); font-size: 24px; margin-bottom: 15px; }
+        .mv-box p { color: var(--text-gray); font-size: 15px; }
+
+        /* Footer */
+        footer { background-color: var(--primary-blue); color: var(--white); padding: 40px 50px; display: flex; justify-content: space-between; margin-top: 20px; flex-wrap: wrap; gap: 20px; }
+        .footer-col h3 { margin-bottom: 15px; color: var(--accent-yellow); }
+        .footer-col p, .footer-col ul li { font-size: 14px; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+    
+    <header>
+        <div class="logo">
+            <img src="image/logo.png" alt="Logo" style="height: 40px; margin-right: 15px;">
+            GURUKUL AASHRAM
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="admission.html">Admissions</a></li>
+                <li><a href="academics.html">Academics</a></li>
+                <li><a href="student-life.html">Student Life</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-banner">
+        <h1>About Gurukul Aashram</h1>
+        <p>A Legacy of Excellence in Education</p>
+    </section>
+
+    <section class="about-container">
+        <div class="about-text">
+            <h2>Our History & Heritage</h2>
+            <p>Welcome to Gurukul Aashram, a place where tradition meets modern education. Established with a profound vision to impart quality education, our institution has been a cornerstone of academic excellence in Begusarai.</p>
+            <p>At Gurukul Aashram, we believe that education is not just about textbooks, but about shaping character, instilling values, and preparing students to face the global challenges of tomorrow. We provide a nurturing environment that encourages curiosity, creativity, and critical thinking.</p>
+            <p>Our dedicated faculty members work tirelessly to identify the unique potential in every child, ensuring holistic development through a balanced mix of academics, sports, and extracurricular activities.</p>
+        </div>
+        <div class="about-image">
+            <img src="image/g4.jpeg" alt="School Building">
+        </div>
+    </section>
+
+    <section class="mission-vision">
+        <div class="mv-box">
+            <h3>Our Mission</h3>
+            <p>To provide a stimulating learning environment with a technological orientation, which maximizes individual potential and ensures that students of all ability levels are well-equipped to meet the challenges of education, work, and life.</p>
+        </div>
+        <div class="mv-box">
+            <h3>Our Vision</h3>
+            <p>To be an institution of excellence that nurtures responsible, compassionate, and self-reliant global citizens who will make a positive impact on society while staying deeply connected to their cultural roots.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-col">
+            <h3>Gurukul Aashram</h3>
+            <p>Empowering the next generation.</p>
+        </div>
+        <div class="footer-col">
+            <h3>Address</h3>
+            <p>Makardahi, Ulao</p>
+            <p>Begusarai, Bihar - 851134</p>
+        </div>
+        <div class="footer-col">
+            <h3>Contact Us</h3>
+            <p>Phone: +91 XXXXXXXXXX</p>
+            <p>Email: info@gurukulaashram.com</p>
+        </div>
+        <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="#">Calendar</a></li>
+                <li><a href="admin.html">Admin Portal</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Careers</a></li>
+            </ul>
+        </div>
+    </footer>
+
+</body>
+</html>

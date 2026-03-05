@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - Gurukul Aashram</title>
+    <style>
+        /* General Reset & Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        :root {
+            --primary-blue: #3228c5;
+            --accent-yellow: #f4b41a;
+            --white: #ffffff;
+            --text-gray: #666;
+        }
+
+        /* Top Bar & Header */
+        .top-bar { background-color: var(--primary-blue); color: var(--white); display: flex; justify-content: flex-end; padding: 5px 50px; font-size: 14px; }
+        .top-bar span { margin-left: 20px; padding: 5px 15px; cursor: pointer; }
+        .enroll-btn { background-color: var(--accent-yellow); color: var(--primary-blue); font-weight: bold; border-radius: 3px; }
+
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background-color: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .logo { font-size: 24px; font-weight: bold; color: var(--primary-blue); display: flex; align-items: center; }
+        nav ul { display: flex; gap: 20px; }
+        nav ul li a { font-weight: bold; font-size: 15px; color: var(--primary-blue); padding: 5px 10px; border-radius: 3px; }
+        nav ul li a:hover { color: var(--accent-yellow); }
+
+        /* Page Banner */
+        .page-banner {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .page-banner h1 { font-size: 36px; margin-bottom: 10px; color: var(--accent-yellow); }
+        .page-banner p { font-size: 18px; }
+
+        /* Events Section */
+        .events-container {
+            padding: 50px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .section-header { color: var(--primary-blue); margin-bottom: 30px; font-size: 28px; border-bottom: 2px solid var(--accent-yellow); padding-bottom: 10px; }
+        
+        .event-card {
+            display: flex;
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .event-date {
+            background-color: var(--primary-blue);
+            color: var(--accent-yellow);
+            min-width: 150px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .event-date h2 { font-size: 36px; line-height: 1; margin-bottom: 5px; }
+        .event-date p { font-size: 16px; font-weight: bold; color: var(--white); }
+
+        .event-details { padding: 25px; flex: 1; }
+        .event-details h3 { color: var(--primary-blue); font-size: 22px; margin-bottom: 10px; }
+        .event-details p { color: var(--text-gray); font-size: 15px; margin-bottom: 15px; }
+        .event-time-loc { font-size: 14px; color: #555; font-weight: bold; }
+
+        /* Footer */
+        footer { background-color: var(--primary-blue); color: var(--white); padding: 40px 50px; display: flex; justify-content: space-between; margin-top: 20px; flex-wrap: wrap; gap: 20px; }
+        .footer-col h3 { margin-bottom: 15px; color: var(--accent-yellow); }
+        .footer-col p, .footer-col ul li { font-size: 14px; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+    
+    <header>
+        <div class="logo">
+            <img src="image/logo.png" alt="Logo" style="height: 40px; margin-right: 15px;">
+            GURUKUL AASHRAM
+        </div>
+       <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="admission.html">Admissions</a></li>
+                <li><a href="academics.html">Academics</a></li>
+                <li><a href="student-life.html">Student Life</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-banner">
+        <h1>News & Events</h1>
+        <p>Stay updated with what's happening at Gurukul Aashram</p>
+    </section>
+
+    <section class="events-container">
+        
+        <h2 class="section-header">Upcoming Events</h2>
+
+        <div class="event-card">
+            <div class="event-date">
+                <h2>15</h2>
+                <p>APR 2026</p>
+            </div>
+            <div class="event-details">
+                <h3>New Academic Session Begins</h3>
+                <p>We welcome all our students back to campus for the start of the 2026-2027 academic year. Ensure you have your books and uniforms ready!</p>
+                <div class="event-time-loc">📍 School Campus | ⏰ 8:00 AM</div>
+            </div>
+        </div>
+
+        <div class="event-card">
+            <div class="event-date">
+                <h2>10</h2>
+                <p>MAY 2026</p>
+            </div>
+            <div class="event-details">
+                <h3>Parent-Teacher Meeting (PTM)</h3>
+                <p>A session for parents to discuss the early progress of their wards with the class teachers and subject experts.</p>
+                <div class="event-time-loc">📍 Main Assembly Hall | ⏰ 10:00 AM - 1:00 PM</div>
+            </div>
+        </div>
+
+        <h2 class="section-header" style="margin-top: 50px;">Past Events Highlight</h2>
+
+        <div class="event-card">
+            <div class="event-date" style="background-color: #555;">
+                <h2>JAN</h2>
+                <p>2026</p>
+            </div>
+            <div class="event-details">
+                <h3>Annual School Function 2026</h3>
+                <p>A grand celebration of our students' talents with mesmerizing cultural performances, award distributions, and an inspiring speech by the Chief Guest to kick off the new year.</p>
+                <div class="event-time-loc">📍 School Grounds</div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer>
+        <div class="footer-col">
+            <h3>Gurukul Aashram</h3>
+            <p>Empowering the next generation.</p>
+        </div>
+        <div class="footer-col">
+            <h3>Address</h3>
+            <p>Makardahi, Ulao</p>
+            <p>Begusarai, Bihar - 851134</p>
+        </div>
+        <div class="footer-col">
+            <h3>Contact Us</h3>
+            <p>Phone: +91 XXXXXXXXXX</p>
+            <p>Email: info@gurukulaashram.com</p>
+        </div>
+        <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="#">Calendar</a></li>
+                <li><a href="admin.html">Admin Portal</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Careers</a></li>
+            </ul>
+        </div>
+    </footer>
+
+</body>
+</html>

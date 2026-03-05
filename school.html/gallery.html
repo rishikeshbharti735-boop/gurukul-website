@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Gurukul Aashram</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #f8f9fa; margin: 0; padding: 0; text-align: center; }
+        .header { background: #3228c5; color: white; padding: 50px 20px; }
+        .back-btn { display: inline-block; margin-top: 15px; color: white; text-decoration: none; border: 1px solid white; padding: 8px 20px; border-radius: 5px; }
+        
+        /* Gallery Layout */
+        .gallery-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+        
+        .gallery-item { 
+            background: white; padding: 10px; border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.3s; 
+        }
+        .gallery-item:hover { transform: translateY(-5px); }
+        
+        .gallery-item img { 
+            width: 100%; height: 250px; object-fit: cover; 
+            border-radius: 8px; cursor: pointer; 
+        }
+        
+        .caption { 
+            margin-top: 12px; font-weight: bold; color: #3228c5; font-size: 16px; 
+        }
+        
+        #no-photos { color: #666; font-style: italic; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>SCHOOL GALLERY</h1>
+        <p>Precious moments of Gurukul Aashram</p>
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <div class="gallery-container">
+        <div id="no-photos" style="display: none;">Abhi tak koi photos upload nahi hui hain.</div>
+        <div class="grid" id="photoGrid">
+            </div>
+    </div>
+
+    <script>
+        // Server se Photos load karne ka function
+        async function fetchGallery() {
+            try {
+                const response = await fetch('/get-gallery');
+                const photos = await response.json();
+                
+                const grid = document.getElementById('photoGrid');
+                const emptyMsg = document.getElementById('no-photos');
+
+                if (photos.length === 0) {
+                    emptyMsg.style.display = 'block';
+                    return;
+                }
+
+                grid.innerHTML = ''; // Loading saaf karein
+                
+                photos.forEach(p => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `
+                        <img src="${p.imagePath}" alt="${p.caption}" onclick="window.open(this.src, '_blank')">
+                        <div class="caption">${p.caption || 'School Event'}</div>
+                    `;
+                    grid.appendChild(item);
+                });
+
+            } catch (err) {
+                console.error("Gallery Error:", err);
+            }
+        }
+
+        // Page khulte hi photos fetch karo
+        window.onload = fetchGallery;
+    </script>
+</body>
+</html>

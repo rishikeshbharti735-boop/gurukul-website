@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Admin Login - Gurukul Aashram</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f4f4; margin: 0; }
+        .box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 320px; text-align: center; }
+        h2 { color: #3228c5; margin-bottom: 25px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus { border-color: #3228c5; box-shadow: 0 0 5px rgba(50, 40, 197, 0.2); }
+        button { background: #3228c5; color: white; border: none; padding: 14px; width: 100%; cursor: pointer; font-weight: bold; border-radius: 6px; margin-top: 15px; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #f4b41a; color: #3228c5; }
+        #msg { color: #d9534f; margin-top: 15px; font-size: 14px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Admin Login</h2>
+        <input type="text" id="user" placeholder="Username" autocomplete="off">
+        <input type="password" id="pass" placeholder="Password">
+        <button id="loginBtn">Login</button>
+        <p id="msg"></p>
+    </div>
+
+    <script>
+        const loginBtn = document.getElementById('loginBtn');
+        const msg = document.getElementById('msg');
+
+        function performLogin() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+
+            if(!u || !p) {
+                msg.innerText = "Username aur Password dono bhariye!";
+                return;
+            }
+
+            msg.innerText = "Checking...";
+
+            fetch('/admin-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: u, password: p })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    sessionStorage.setItem('isAdmin', 'true');
+                    window.location.href = 'admin.html';
+                } else {
+                    msg.innerText = data.message;
+                }
+            })
+            .catch(err => {
+                console.error("Fetch error:", err);
+                msg.innerText = "Server se connect nahi ho pa raha!";
+            });
+        }
+
+        // Button click par login
+        loginBtn.addEventListener('click', performLogin);
+
+        // Enter key dabane par bhi login ho jaye
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performLogin();
+        });
+    </script>
+</body>
+</html>

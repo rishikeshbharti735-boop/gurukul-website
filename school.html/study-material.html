@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Study Material - Gurukul Aashram</title>
+    <style>
+        body { font-family: Arial; background: #f4f4f4; text-align: center; padding: 50px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
+        .class-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer; border-bottom: 5px solid #3228c5; }
+        .class-card:hover { transform: translateY(-5px); background: #3228c5; color: white; }
+        h1 { color: #3228c5; margin-bottom: 40px; }
+    </style>
+</head>
+<body>
+    <h1>CHOOSE YOUR CLASS</h1>
+    <div class="grid">
+        <div class="class-card" onclick="location.href='/materials/class1.pdf'"><h3>Class 1</h3></div>
+        <div class="class-card" onclick="location.href='/materials/class2.pdf'"><h3>Class 2</h3></div>
+        <div class="class-card" onclick="location.href='/materials/class3.pdf'"><h3>Class 3</h3></div>
+        </div>
+</body>
+</html>

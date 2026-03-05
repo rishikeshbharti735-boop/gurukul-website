@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Life - Gurukul Aashram</title>
+    <style>
+        /* General Reset & Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        :root {
+            --primary-blue: #3228c5;
+            --accent-yellow: #f4b41a;
+            --white: #ffffff;
+            --text-gray: #666;
+        }
+
+        /* Top Bar & Header */
+        .top-bar { background-color: var(--primary-blue); color: var(--white); display: flex; justify-content: flex-end; padding: 5px 50px; font-size: 14px; }
+        .top-bar span { margin-left: 20px; padding: 5px 15px; cursor: pointer; }
+        .enroll-btn { background-color: var(--accent-yellow); color: var(--primary-blue); font-weight: bold; border-radius: 3px; }
+
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background-color: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .logo { font-size: 24px; font-weight: bold; color: var(--primary-blue); display: flex; align-items: center; }
+        nav ul { display: flex; gap: 20px; }
+        nav ul li a { font-weight: bold; font-size: 15px; color: var(--primary-blue); padding: 5px 10px; border-radius: 3px; }
+        nav ul li a:hover { color: var(--accent-yellow); }
+
+        /* Page Banner */
+        .page-banner {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .page-banner h1 { font-size: 36px; margin-bottom: 10px; color: var(--accent-yellow); }
+        .page-banner p { font-size: 18px; }
+
+        /* Student Life Content Layout */
+        .life-container {
+            padding: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header { text-align: center; color: var(--primary-blue); margin-bottom: 40px; font-size: 32px; }
+        
+        .activities-grid {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        
+        .activity-card {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .activity-img {
+            height: 200px;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #777;
+            overflow: hidden;
+        }
+        .activity-img img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .activity-info { padding: 25px; }
+        .activity-info h3 { color: var(--primary-blue); font-size: 22px; margin-bottom: 15px; }
+        .activity-info p { color: var(--text-gray); font-size: 15px; }
+
+        /* Footer */
+        footer { background-color: var(--primary-blue); color: var(--white); padding: 40px 50px; display: flex; justify-content: space-between; margin-top: 20px; flex-wrap: wrap; gap: 20px; }
+        .footer-col h3 { margin-bottom: 15px; color: var(--accent-yellow); }
+        .footer-col p, .footer-col ul li { font-size: 14px; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+     <header>
+        <div class="logo">
+            <img src="image/logo.png" alt="Logo" style="height: 40px; margin-right: 15px;">
+            GURUKUL AASHRAM
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="admission.html">Admissions</a></li>
+                <li><a href="academics.html">Academics</a></li>
+                <li><a href="student-life.html">Student Life</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-banner">
+        <h1>Student Life</h1>
+        <p>Beyond the Classroom: Discover Your Passions</p>
+    </section>
+
+    <section class="life-container">
+        <h2 class="section-header">Campus Activities</h2>
+        
+        <div class="activities-grid">
+            
+            <div class="activity-card">
+                <div class="activity-img">
+                    [Sports Image]
+                </div>
+                <div class="activity-info">
+                    <h3>Sports & Athletics</h3>
+                    <p>We believe in physical fitness and teamwork. Our campus offers facilities for cricket, football, volleyball, and various indoor games to keep students active and healthy.</p>
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <div class="activity-img">
+                    [Arts Image]
+                </div>
+                <div class="activity-info">
+                    <h3>Arts & Culture</h3>
+                    <p>Students are encouraged to express their creativity through painting, music, dance, and drama. We regularly host cultural programs to showcase their hidden talents.</p>
+                </div>
+            </div>
+
+            <div class="activity-card">
+                <div class="activity-img">
+                    [Clubs Image]
+                </div>
+                <div class="activity-info">
+                    <h3>Clubs & Societies</h3>
+                    <p>From the Science and Eco Club to the Literature Society, students can join groups that align with their interests, helping them develop leadership and social skills.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-col">
+            <h3>Gurukul Aashram</h3>
+            <p>Empowering the next generation.</p>
+        </div>
+        <div class="footer-col">
+            <h3>Address</h3>
+            <p>Makardahi, Ulao</p>
+            <p>Begusarai, Bihar - 851134</p>
+        </div>
+        <div class="footer-col">
+            <h3>Contact Us</h3>
+            <p>Phone: +91 XXXXXXXXXX</p>
+            <p>Email: info@gurukulaashram.com</p>
+        </div>
+        <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="#">Calendar</a></li>
+                <li><a href="admin.html">Admin Portal</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">Careers</a></li>
+            </ul>
+        </div>
+    </footer>
+
+</body>
+</html>

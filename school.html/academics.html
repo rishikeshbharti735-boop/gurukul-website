@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Material - Gurukul Aashram</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .header-section { background: #3228c5; color: white; padding: 40px 20px; text-align: center; }
+        .container { max-width: 1100px; margin: -30px auto 50px; padding: 0 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        
+        .class-card { 
+            background: white; padding: 35px 20px; border-radius: 15px; text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s;
+            border-bottom: 6px solid #f4b41a; position: relative;
+        }
+        .class-card:hover { transform: translateY(-10px); box-shadow: 0 10px 25px rgba(50, 40, 197, 0.2); }
+        .class-card h3 { margin: 0; font-size: 24px; color: #3228c5; }
+        
+        .status-badge { 
+            display: inline-block; margin-top: 15px; padding: 5px 12px; 
+            border-radius: 20px; font-size: 12px; font-weight: bold; 
+        }
+        .available { background: #e6f9ed; color: #15803d; }
+        .not-available { background: #f1f1f1; color: #666; }
+        
+        .back-home { margin-top: 25px; display: inline-block; color: white; text-decoration: none; font-weight: bold; border: 1px solid white; padding: 8px 20px; border-radius: 5px; }
+        .back-home:hover { background: white; color: #3228c5; }
+
+        /* Loading Spinner */
+        #loader { text-align: center; padding: 50px; font-weight: bold; color: #3228c5; }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <h1>STUDY MATERIAL PORTAL</h1>
+        <p>Direct access to Class-wise PDFs, Notes & Assignments</p>
+        <a href="index.html" class="back-home">← Back to Home</a>
+    </div>
+
+    <div class="container">
+        <div id="loader">Fetching latest materials...</div>
+        <div class="grid" id="materialsGrid">
+            </div>
+    </div>
+
+    <script>
+        // Server se Materials fetch karne ka function
+        async function loadMaterials() {
+            try {
+                const response = await fetch('/get-materials');
+                const savedMaterials = await response.json();
+                
+                const grid = document.getElementById('materialsGrid');
+                const loader = document.getElementById('loader');
+                grid.innerHTML = ''; 
+                loader.style.display = 'none';
+
+                // Inka naam wahi hona chahiye jo Admin Dashboard ke Select box mein hai
+                const classes = [
+                    "Nursery", "L.K.G", "U.K.G", 
+                    "Class 1", "Class 2", "Class 3", 
+                    "Class 4", "Class 5", "Class 10"
+                ];
+
+                classes.forEach(className => {
+                    // Check karo ki kya is class ka koi link database mein hai
+                    const materialData = savedMaterials.find(m => m.className === className);
+                    const link = materialData ? materialData.link : null;
+
+                    const card = document.createElement('div');
+                    card.className = 'class-card';
+                    
+                    // Click logic
+                    card.onclick = () => {
+                        if (link) {
+                            window.open(link, '_blank');
+                        } else {
+                            alert("Kripya pratiksha karein! " + className + " ka material jald hi upload kiya jayega.");
+                        }
+                    };
+
+                    card.innerHTML = `
+                        <h3>${className}</h3>
+                        <span class="status-badge ${link ? 'available' : 'not-available'}">
+                            ${link ? '● PDF Available' : '○ Coming Soon'}
+                        </span>
+                    `;
+                    
+                    grid.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error("Error:", err);
+                document.getElementById('loader').innerText = "Server se contact nahi ho pa raha. Kripya check karein ki server.js chal raha hai ya nahi.";
+            }
+        }
+
+        // Page load hote hi data mangwao
+        window.onload = loadMaterials;
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Teachers - Gurukul Aashram</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .header { background: #3228c5; color: white; padding: 50px 20px; text-align: center; }
+        .container { max-width: 1200px; margin: 30px auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; padding: 0 20px; }
+        
+        .t-card { 
+            background: white; width: 280px; padding: 25px; border-radius: 15px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; 
+            transition: 0.3s; border-top: 5px solid #f4b41a;
+        }
+        .t-card:hover { transform: translateY(-10px); }
+        
+        .t-img { 
+            width: 140px; height: 140px; border-radius: 50%; object-fit: cover; 
+            border: 4px solid #3228c5; margin-bottom: 15px; background: #eee;
+        }
+        
+        h3 { color: #3228c5; margin: 10px 0 5px; font-size: 22px; }
+        .designation { color: #f4b41a; font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        .qual { color: #666; font-size: 14px; }
+        
+        .back { 
+            display: inline-block; margin-top: 20px; color: white; text-decoration: none; 
+            border: 1px solid white; padding: 10px 25px; border-radius: 5px; font-weight: bold; 
+        }
+        .back:hover { background: white; color: #3228c5; }
+        
+        #loadingMsg { text-align: center; width: 100%; color: #3228c5; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>OUR EXPERT FACULTY</h1>
+        <p>Dedicated educators shaping the future of our students</p>
+        <a href="index.html" class="back">← Back to Home</a>
+    </div>
+
+    <div class="container" id="facultyGrid">
+        <p id="loadingMsg">Loading teacher profiles...</p>
+    </div>
+
+    <script>
+        // Server se Faculty data mangwane ka function
+        async function loadFaculty() {
+            try {
+                const response = await fetch('/get-faculty');
+                const teachers = await response.json();
+                
+                const grid = document.getElementById('facultyGrid');
+                grid.innerHTML = ''; // Loading text hatao
+
+                if (teachers.length === 0) {
+                    grid.innerHTML = "<p>No faculty profiles added yet.</p>";
+                    return;
+                }
+
+                teachers.forEach(t => {
+                    const card = document.createElement('div');
+                    card.className = 't-card';
+                    card.innerHTML = `
+                        <img src="${t.photo}" class="t-img" alt="${t.name}">
+                        <h3>${t.name}</h3>
+                        <p class="designation">${t.designation}</p>
+                        <p class="qual">${t.qualification}</p>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (err) {
+                console.error("Error loading faculty:", err);
+                document.getElementById('facultyGrid').innerHTML = "<p>Server error! Make sure server.js is running.</p>";
+            }
+        }
+
+        // Page load hote hi function chalao
+        window.onload = loadFaculty;
+    </script>
+</body>
+</html>
