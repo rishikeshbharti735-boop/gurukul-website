@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Gurukul Aashram</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@500;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0d1b4b;
+            --navy-mid: #1e3575;
+            --gold: #c9a84c;
+            --gold-light: #f5e6bb;
+            --gold-pale: #fdf8ed;
+            --green: #1b5e20;
+            --green-mid: #2e7d32;
+            --red: #c62828;
+            --blue: #1565c0;
+            --purple: #6a1b9a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Crimson Text', Georgia, serif;
+            background: #eef0f4;
+            min-height: 100vh;
+        }
+
+        /* ── TOP NAV BAR ── */
+        .topbar {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+            border-bottom: 3px solid var(--gold);
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+        .topbar-left { display: flex; align-items: center; gap: 16px; }
+        .topbar-logo { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 900; color: var(--gold-light); letter-spacing: 2px; }
+        .topbar-logo em { color: var(--gold); font-style: normal; }
+        .topbar-badge {
+            background: rgba(201,168,76,0.15);
+            border: 1px solid rgba(201,168,76,0.3);
+            color: var(--gold);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            padding: 3px 10px;
+        }
+        .topbar-right { display: flex; align-items: center; gap: 20px; }
+        .nav-link { text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(245,230,187,0.7); transition: color 0.2s; }
+        .nav-link:hover { color: var(--gold); }
+        .logout-btn { text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold-light); background: var(--red); padding: 6px 18px; border: 1px solid rgba(255,255,255,0.15); transition: all 0.2s; }
+        .logout-btn:hover { background: #b71c1c; }
+
+        /* ── PAGE WRAPPER ── */
+        .page-wrap { max-width: 1280px; margin: 0 auto; padding: 28px 24px 40px; }
+
+        /* ── FLASH MESSAGE ── */
+        .flash-msg { background: #e8f5e9; border-left: 4px solid var(--green-mid); color: var(--green); font-family: 'Cormorant Garamond', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; padding: 12px 18px; margin-bottom: 20px; }
+
+        /* ── TAB NAVIGATION ── */
+        .tab-nav { display: flex; gap: 4px; border-bottom: 2px solid var(--gold); margin-bottom: 24px; overflow-x: auto; }
+        .tab-btn { padding: 10px 22px; background: white; border: 1px solid #ddd; border-bottom: none; font-family: 'Cormorant Garamond', serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #888; cursor: pointer; transition: all 0.2s; white-space: nowrap; position: relative; top: 2px; }
+        .tab-btn:hover { color: var(--navy); border-color: var(--gold); }
+        .tab-btn.active-tab { background: var(--navy); color: var(--gold); border-color: var(--gold); border-bottom: 2px solid var(--navy); }
+
+        /* ── SECTION CARD ── */
+        .section-card { background: white; border: 1.5px solid #e8e2d0; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px; }
+        .section-card-head { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--gold); }
+        .section-card-head h3 { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--gold-light); letter-spacing: 1px; }
+        .record-count { font-family: 'Cormorant Garamond', serif; font-size: 11px; color: var(--gold); opacity: 0.8; letter-spacing: 1px; }
+
+        /* ── STATS ROW ── */
+        .stats-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-box { background: white; border: 1.5px solid #e8e2d0; padding: 18px 20px; display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .stat-icon { font-size: 28px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: var(--gold-pale); border: 1px solid rgba(201,168,76,0.3); flex-shrink: 0; }
+        .stat-label { font-family: 'Cormorant Garamond', serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #888; }
+        .stat-val { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--navy); line-height: 1; margin-top: 2px; }
+
+        /* ── TABLE ── */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table thead th { background: var(--navy); color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 10px 12px; text-align: left; border: none; }
+        .data-table tbody tr { border-bottom: 1px solid #f0ebe0; transition: background 0.15s; }
+        .data-table tbody tr:nth-child(even) { background: #fafaf7; }
+        .data-table tbody tr:hover { background: #fdf8ed; }
+        .data-table tbody td { padding: 9px 12px; font-family: 'Crimson Text', serif; font-size: 13.5px; color: #2a2a3e; vertical-align: middle; }
+        .data-table tbody td:first-child { font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 12px; color: var(--navy); letter-spacing: 0.3px; }
+
+        /* ── ACTION BUTTONS ── */
+        .action-btn { text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; display: inline-block; margin: 1px; transition: all 0.2s; border: 1px solid; white-space: nowrap; }
+        .btn-receipt  { color: var(--blue);   border-color: var(--blue);   background: #e3f2fd; }
+        .btn-idcard   { color: var(--purple);  border-color: var(--purple); background: #f3e5f5; }
+        .btn-bill     { color: var(--green);   border-color: var(--green);  background: #e8f5e9; }
+        .btn-delete   { color: var(--red);     border-color: var(--red);    background: #ffebee; }
+        .btn-gold-sm  { color: #7a5c00;        border-color: var(--gold);   background: var(--gold-pale); }
+        .btn-receipt:hover  { background: var(--blue);   color: white; }
+        .btn-idcard:hover   { background: var(--purple); color: white; }
+        .btn-bill:hover     { background: var(--green);  color: white; }
+        .btn-delete:hover   { background: var(--red);    color: white; }
+        .btn-gold-sm:hover  { background: var(--gold);   color: var(--navy); }
+
+        /* ── MARKSHEET QUICK LINKS ── */
+        .ms-quicklinks {
+            display: flex;
+            gap: 14px;
+            padding: 22px;
+            background: var(--gold-pale);
+            border-bottom: 1px solid #e8e2d0;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .ms-ql-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            text-decoration: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px; font-weight: 700; letter-spacing: 1px;
+            padding: 10px 22px;
+            border: 2px solid;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .ms-ql-upload { color: var(--navy); border-color: var(--navy); background: white; }
+        .ms-ql-upload:hover { background: var(--navy); color: white; }
+        .ms-ql-print { color: white; border-color: var(--green); background: var(--green); }
+        .ms-ql-print:hover { background: var(--green-mid); }
+        .ms-ql-note { font-family: 'Crimson Text', serif; font-size: 13px; color: #888; }
+
+        /* ── FEE STRUCTURE FORM ── */
+        .fee-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; padding: 20px; background: var(--gold-pale); border-bottom: 1.5px solid #e8e2d0; }
+        .fee-form-group { display: flex; flex-direction: column; }
+        .fee-form-group label { font-family: 'Cormorant Garamond', serif; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--navy); opacity: 0.75; margin-bottom: 5px; }
+        .fee-form-group input { padding: 9px 12px; border: 1px solid #d4c8a0; font-family: 'Crimson Text', serif; font-size: 14px; background: white; outline: none; transition: border-color 0.2s; }
+        .fee-form-group input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.12); }
+        .fee-form-group.full { grid-column: 1 / -1; }
+        .fee-save-btn { grid-column: 1 / -1; background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%); color: white; border: none; padding: 12px; font-family: 'Cormorant Garamond', serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+        .fee-save-btn:hover { letter-spacing: 3px; }
+
+        /* ── FINANCE ── */
+        .finance-bar { display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); border-bottom: 2px solid var(--gold); padding: 14px 20px; }
+        .finance-bar-left h3 { font-family: 'Playfair Display', serif; font-size: 14px; color: var(--gold-light); letter-spacing: 1px; }
+        .finance-total { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--gold); margin-top: 2px; }
+        .print-report-btn { background: rgba(201,168,76,0.15); border: 1px solid var(--gold); color: var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 8px 20px; cursor: pointer; transition: all 0.2s; }
+        .print-report-btn:hover { background: var(--gold); color: var(--navy); }
+        .amount-cell { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: var(--green-mid) !important; }
+        .empty-state { padding: 40px; text-align: center; color: #bbb; font-family: 'Cormorant Garamond', serif; font-size: 14px; letter-spacing: 1px; }
+
+        /* ── PRINT ── */
+        @media print {
+            .topbar, .tab-nav, .no-print, .btn-delete, .stats-row { display: none !important; }
+            body { background: white; }
+            .page-wrap { padding: 0; }
+            .data-table thead th { background: var(--navy) !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+
+        @media (max-width: 768px) {
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .page-wrap { padding: 16px 12px; }
+            .topbar { padding: 0 16px; }
+            .topbar-badge { display: none; }
+        }
+        @media (max-width: 480px) {
+            .stats-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="topbar">
+    <div class="topbar-left">
+        <div class="topbar-logo">GURUKUL <em>AASHRAM</em></div>
+        <div class="topbar-badge">Admin Portal</div>
+    </div>
+    <div class="topbar-right">
+        <a href="/" class="nav-link">🏠 Home</a>
+        <a href="/fee_management" class="nav-link">💰 Fees</a>
+        <a href="/admin/marksheet-upload" class="nav-link">📤 Marksheet</a>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+</div>
+
+<div class="page-wrap">
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash-msg">✅ &nbsp; {{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Stats Row — now 5 boxes -->
+    <div class="stats-row no-print">
+        <div class="stat-box">
+            <div class="stat-icon">📋</div>
+            <div>
+                <div class="stat-label">Admissions</div>
+                <div class="stat-val">{{ admissions|length }}</div>
+            </div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-icon">📝</div>
+            <div>
+                <div class="stat-label">Registrations</div>
+                <div class="stat-val">{{ registrations|length }}</div>
+            </div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-icon">🎓</div>
+            <div>
+                <div class="stat-label">Marksheets</div>
+                <div class="stat-val">{{ marks|length }}</div>
+            </div>
+        </div>
+        <!-- ★ NEW STAT BOX -->
+        <div class="stat-box" style="border-color: rgba(201,168,76,0.4); background: var(--gold-pale);">
+            <div class="stat-icon">📄</div>
+            <div>
+                <div class="stat-label">Report Cards</div>
+                <div class="stat-val" style="color: #7a5c00;">{{ marksheet_count }}</div>
+            </div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-icon">💰</div>
+            <div>
+                <div class="stat-label">Total Collection</div>
+                <div class="stat-val" style="font-size:18px; color: var(--green-mid);">₹{{ fees|sum(attribute='Paid Amount')|int }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB NAVIGATION -->
+    <div class="tab-nav no-print">
+        <button class="tab-btn active-tab" onclick="showTab(event, 'marks_sec')">🎓 Marksheets</button>
+        <button class="tab-btn" onclick="showTab(event, 'adm_sec')">📋 Admissions</button>
+        <button class="tab-btn" onclick="showTab(event, 'reg_sec')">📝 Registrations</button>
+        <button class="tab-btn" onclick="showTab(event, 'fee_sec')">💰 Finance & Fees</button>
+        <!-- ★ NEW TAB -->
+        <button class="tab-btn" onclick="showTab(event, 'reportcard_sec')">📄 Report Cards</button>
+    </div>
+
+    <!-- TAB: MARKSHEETS -->
+    <div id="marks_sec" class="tab-content">
+        <div class="section-card">
+            <div class="section-card-head">
+                <h3>🎓 Academic / Marksheet Records</h3>
+                <span class="record-count">{{ marks|length }} records</span>
+            </div>
+            {% if marks %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th class="no-print">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in marks %}
+                    <tr>
+                        <td>{{ row['Roll No'] }}</td>
+                        <td>{{ row['Student Name'] }}</td>
+                        <td>{{ row['Class'] }}</td>
+                        <td class="no-print">
+                            <a href="{{ url_for('delete_entry', category='marks', index=loop.index0) }}"
+                               class="action-btn btn-delete"
+                               onclick="return confirm('Is entry ko delete karein?')">🗑 Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">— Koi marksheet record nahi mila —</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- TAB: ADMISSIONS -->
+    <div id="adm_sec" class="tab-content" style="display:none;">
+        <div class="section-card">
+            <div class="section-card-head">
+                <h3>📋 Admission Database</h3>
+                <span class="record-count">{{ admissions|length }} records</span>
+            </div>
+            {% if admissions %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th>Father</th>
+                        <th>Mobile</th>
+                        <th class="no-print">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in admissions %}
+                    <tr>
+                        <td>{{ row['Student ID'] }}</td>
+                        <td><strong>{{ row['Student Name'] }}</strong></td>
+                        <td>{{ row['Class'] }}</td>
+                        <td>{{ row.get('Father', '—') }}</td>
+                        <td>{{ row.get('Mobile', '—') }}</td>
+                        <td class="no-print">
+                            <a href="{{ url_for('view_admission_receipt', index=loop.index0) }}"
+                               class="action-btn btn-receipt" target="_blank">🖨 Receipt</a>
+                            <a href="{{ url_for('delete_entry', category='admission', index=loop.index0) }}"
+                               class="action-btn btn-delete"
+                               onclick="return confirm('Delete karein?')">🗑 Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">— Koi admission record nahi mila —</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- TAB: REGISTRATIONS -->
+    <div id="reg_sec" class="tab-content" style="display:none;">
+        <div class="section-card">
+            <div class="section-card-head">
+                <h3>📝 Registration Database</h3>
+                <span class="record-count">{{ registrations|length }} records</span>
+            </div>
+            {% if registrations %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Reg No</th>
+                        <th>Roll No</th>
+                        <th>Student Name</th>
+                        <th>Class</th>
+                        <th>Father Name</th>
+                        <th>Mobile</th>
+                        <th class="no-print">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in registrations %}
+                    <tr>
+                        <td>{{ row['Reg No'] }}</td>
+                        <td>{{ row['Roll No'] }}</td>
+                        <td><strong>{{ row['Student Name'] }}</strong></td>
+                        <td>{{ row['Class'] }}</td>
+                        <td>{{ row.get('Father Name', '—') }}</td>
+                        <td>{{ row.get('Mobile No', '—') }}</td>
+                        <td class="no-print">
+                            <a href="{{ url_for('view_reg_receipt', index=loop.index0) }}"
+                               class="action-btn btn-receipt" target="_blank">🖨 Receipt</a>
+                            <a href="{{ url_for('generate_id_card', reg_no=row['Reg No']) }}"
+                               class="action-btn btn-idcard" target="_blank">🪪 ID Card</a>
+                            <a href="{{ url_for('view_bill', reg_no=row['Reg No']) }}"
+                               class="action-btn btn-bill" target="_blank">💰 Bill</a>
+                            <a href="{{ url_for('delete_entry', category='reg', index=loop.index0) }}"
+                               class="action-btn btn-delete"
+                               onclick="return confirm('Delete karein?')">🗑 Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">— Koi registration record nahi mila —</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- TAB: FINANCE & FEES -->
+    <div id="fee_sec" class="tab-content" style="display:none;">
+        <div class="section-card no-print" style="margin-bottom:20px;">
+            <div class="section-card-head">
+                <h3>⚙️ Fee Structure Set Karein (Per Student)</h3>
+                <span class="record-count">Yearly fee heads</span>
+            </div>
+            <form action="/save_fee_structure" method="POST" class="fee-form-grid">
+                <div class="fee-form-group full">
+                    <label>Student Registration Number <span style="color:var(--red);">*</span></label>
+                    <input type="text" name="reg_no" placeholder="e.g. GAA/REG/2026/101" required>
+                </div>
+                <div class="fee-form-group">
+                    <label>Tuition Fee (₹)</label>
+                    <input type="number" name="tuition_fee" placeholder="0" min="0">
+                </div>
+                <div class="fee-form-group">
+                    <label>Transport Fee (₹)</label>
+                    <input type="number" name="transport_fee" placeholder="0" min="0">
+                </div>
+                <div class="fee-form-group">
+                    <label>Computer Fee (₹)</label>
+                    <input type="number" name="computer_fee" placeholder="0" min="0">
+                </div>
+                <div class="fee-form-group">
+                    <label>Annual Charge (₹)</label>
+                    <input type="number" name="annual_charge" placeholder="0" min="0">
+                </div>
+                <div class="fee-form-group">
+                    <label>Exam Fee (₹)</label>
+                    <input type="number" name="exam_fee" placeholder="0" min="0">
+                </div>
+                <button type="submit" class="fee-save-btn">💾 &nbsp; Save Fee Structure</button>
+            </form>
+        </div>
+        <div class="section-card">
+            <div class="finance-bar">
+                <div class="finance-bar-left">
+                    <h3>📊 Fee Collection History</h3>
+                    <div class="finance-total">₹{{ fees|sum(attribute='Paid Amount')|int }}</div>
+                </div>
+                <button onclick="window.print()" class="print-report-btn no-print">🖨 Print Report</button>
+            </div>
+            {% if fees %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Reg No</th><th>Month</th><th>Amount</th><th>Date</th>
+                        <th class="no-print">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in fees %}
+                    <tr>
+                        <td>{{ row['Reg No'] }}</td>
+                        <td><strong>{{ row['Month'] }}</strong></td>
+                        <td class="amount-cell">₹{{ row['Paid Amount'] }}</td>
+                        <td>{{ row['Date'] }}</td>
+                        <td class="no-print">
+                            <a href="{{ url_for('delete_fee_entry', index=loop.index0) }}"
+                               class="action-btn btn-delete"
+                               onclick="return confirm('Payment delete karein?')">🗑 Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">— Koi fee collection record nahi mila —</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ★★★ TAB: REPORT CARDS ★★★ -->
+    <div id="reportcard_sec" class="tab-content" style="display:none;">
+        <div class="section-card">
+            <div class="section-card-head">
+                <h3>📄 Report Card / Marksheet Management</h3>
+                <span class="record-count">{{ marksheet_count }} students</span>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="ms-quicklinks">
+                <a href="/admin/marksheet-upload" class="ms-ql-btn ms-ql-upload">
+                    📤 Data Upload Karo
+                </a>
+                <a href="/admin/marksheet-print" class="ms-ql-btn ms-ql-print">
+                    🖨️ Class-wise Print Karo
+                </a>
+                <span class="ms-ql-note">
+                    Excel upload karo ya manually enter karo → Class select karo → Saare marksheet ek PDF mein print karo
+                </span>
+            </div>
+
+            <!-- Mini stats by class -->
+            {% if marksheet_count > 0 %}
+            <div style="padding: 18px 20px;">
+                <p style="font-family:'Cormorant Garamond',serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#888; margin-bottom:12px;">Class-wise Breakdown</p>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    {% set class_order = ['I','II','III','IV','V','VI','VII','VIII','IX','X'] %}
+                    {# We pass marksheet_count from Flask. For class breakdown, link to print page #}
+                    <a href="/admin/marksheet-print" style="text-decoration:none;">
+                        <div style="background:var(--gold-pale); border:1px solid rgba(201,168,76,0.4); padding:12px 18px; font-family:'Playfair Display',serif; font-size:13px; color:var(--navy); transition:all 0.2s;" onmouseover="this.style.background='var(--gold)'" onmouseout="this.style.background='var(--gold-pale)'">
+                            View All {{ marksheet_count }} Records →
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                — Abhi koi report card data nahi hai —<br>
+                <a href="/admin/marksheet-upload" style="color:var(--gold); font-family:'Cormorant Garamond',serif; font-size:13px; font-weight:700; letter-spacing:1px; margin-top:10px; display:inline-block;">📤 Data Upload Karein →</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div><!-- end page-wrap -->
+
+<script>
+    function showTab(evt, tabName) {
+        document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active-tab'));
+        document.getElementById(tabName).style.display = 'block';
+        evt.currentTarget.classList.add('active-tab');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Gurukul Aashram</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@500;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Crimson Text', Georgia, serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg,#fde8d8 0%,#fdf0e8 40%,#fce4d0 70%,#fbeadf 100%);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px 16px;
+    }
+    .gk-card {
+      width: 100%; max-width: 520px;
+      background: #fffdf7; border: 2px solid #c9a84c;
+      border-radius: 28px; overflow: hidden;
+      box-shadow: 0 32px 80px rgba(120,60,0,0.18), 0 0 0 6px rgba(201,168,76,0.10);
+    }
+    .gk-header {
+      background: linear-gradient(160deg,#2d1a00 0%,#5a3200 60%,#7a4500 100%);
+      padding: 22px 28px 18px; text-align: center;
+      border-bottom: 2.5px solid #c9a84c;
+    }
+    .gk-name { font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:#f5e6bb; letter-spacing:3px; line-height:1; margin-top:8px; }
+    .gk-name em { color:#f0c040; font-style:normal; }
+    .gk-tag { font-family:'Cormorant Garamond',serif; font-size:11px; color:rgba(245,230,187,0.6); letter-spacing:2px; text-transform:uppercase; margin-top:4px; }
+    .gk-rule { height:1.5px; background:linear-gradient(90deg,transparent,#c9a84c,#f0d080,#c9a84c,transparent); margin:12px 24px 0; }
+    .gk-badge { display:inline-block; background:#c9a84c; color:#3d1f00; font-family:'Cormorant Garamond',serif; font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; padding:5px 22px; margin-top:10px; border-radius:20px; }
+    .gk-body { padding:20px 18px 16px; }
+    .gk-sec { font-family:'Cormorant Garamond',serif; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#7a4500; opacity:0.7; margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+    .gk-sec::after { content:''; flex:1; height:1px; background:linear-gradient(to right,rgba(201,168,76,0.5),transparent); }
+    .gk-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+    .gk-btn { text-decoration:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:20px 12px; border-radius:20px; font-family:'Cormorant Garamond',serif; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; cursor:pointer; transition:transform 0.25s,box-shadow 0.25s; }
+    .gk-btn:hover { transform:translateY(-5px) scale(1.03); }
+    .gk-btn:active { transform:scale(0.97); }
+    .gk-icon { font-size:26px; line-height:1; }
+    .gk-main { font-size:13px; font-weight:700; text-align:center; line-height:1.2; }
+    .gk-sub { font-size:10.5px; font-weight:400; text-transform:none; text-align:center; line-height:1.3; opacity:0.7; }
+
+    .btn-warm { background:linear-gradient(145deg,#5a2d00,#7a4500); color:#f5e6bb; border:1px solid rgba(201,168,76,0.25); box-shadow:0 6px 18px rgba(90,45,0,0.3); }
+    .btn-warm:hover { box-shadow:0 14px 32px rgba(90,45,0,0.4)!important; }
+
+    /* Full-width row buttons */
+    .btn-saffron { grid-column:span 2; flex-direction:row; justify-content:flex-start; padding:16px 22px; border-radius:50px; gap:14px; background:linear-gradient(135deg,#e07b00,#f59c00,#e07b00); color:#fff; border:1px solid rgba(255,180,0,0.4); box-shadow:0 8px 24px rgba(224,123,0,0.35); }
+    .btn-saffron:hover { box-shadow:0 16px 36px rgba(224,123,0,0.45)!important; }
+
+    .btn-forest { grid-column:span 2; flex-direction:row; justify-content:flex-start; padding:16px 22px; border-radius:50px; gap:14px; background:linear-gradient(135deg,#1a5216,#2e7d32,#1a5216); color:#e8f5e9; border:1px solid rgba(255,255,255,0.10); box-shadow:0 8px 24px rgba(26,82,22,0.35); }
+    .btn-forest:hover { box-shadow:0 16px 36px rgba(26,82,22,0.45)!important; }
+
+    .btn-teal { grid-column:span 2; flex-direction:row; justify-content:flex-start; padding:16px 22px; border-radius:50px; gap:14px; background:linear-gradient(135deg,#00575f,#00838f,#00575f); color:#e0f7fa; border:1px solid rgba(255,255,255,0.10); box-shadow:0 8px 24px rgba(0,87,95,0.35); }
+    .btn-teal:hover { box-shadow:0 16px 36px rgba(0,87,95,0.45)!important; }
+
+    /* ★ NEW — Marksheet Upload button */
+    .btn-indigo { grid-column:span 2; flex-direction:row; justify-content:flex-start; padding:16px 22px; border-radius:50px; gap:14px; background:linear-gradient(135deg,#1a237e,#303f9f,#1a237e); color:#e8eaf6; border:1px solid rgba(255,255,255,0.12); box-shadow:0 8px 24px rgba(26,35,126,0.35); }
+    .btn-indigo:hover { box-shadow:0 16px 36px rgba(26,35,126,0.48)!important; }
+
+    /* shared styles for wide buttons */
+    .btn-saffron .gk-icon,.btn-forest .gk-icon,.btn-teal .gk-icon,.btn-indigo .gk-icon { font-size:24px; }
+    .btn-saffron .gk-main,.btn-forest .gk-main,.btn-teal .gk-main,.btn-indigo .gk-main { font-size:15px; text-align:left; }
+    .btn-saffron .gk-sub  { text-align:left; color:rgba(255,255,255,0.72); }
+    .btn-forest .gk-sub   { text-align:left; color:rgba(232,245,233,0.65); }
+    .btn-teal .gk-sub     { text-align:left; color:rgba(224,247,250,0.65); }
+    .btn-indigo .gk-sub   { text-align:left; color:rgba(232,234,246,0.65); }
+
+    .gk-div { height:1px; background:linear-gradient(90deg,transparent,rgba(201,168,76,0.4),transparent); margin:14px 0; }
+    .gk-admin { text-align:center; padding-bottom:4px; }
+    .gk-note { font-family:'Cormorant Garamond',serif; font-size:11px; color:#999; letter-spacing:1px; margin-bottom:10px; }
+    .gk-alink { display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#3d1f00; font-family:'Cormorant Garamond',serif; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; background:#fff; border:1.5px solid rgba(90,45,0,0.22); padding:10px 28px; border-radius:50px; transition:all 0.28s; box-shadow:0 4px 12px rgba(0,0,0,0.06); }
+    .gk-alink:hover { background:#5a2d00; color:#f5e6bb; border-color:#5a2d00; transform:translateY(-3px); box-shadow:0 10px 28px rgba(90,45,0,0.3); }
+    .gk-footer { background:linear-gradient(135deg,#2d1a00,#5a3200); padding:9px; text-align:center; font-family:'Cormorant Garamond',serif; font-size:9px; color:rgba(201,168,76,0.5); letter-spacing:2px; text-transform:uppercase; border-top:2px solid #c9a84c; }
+
+    @media (max-width:480px) {
+      .gk-grid { grid-template-columns:1fr; }
+      .btn-saffron,.btn-forest,.btn-teal,.btn-indigo { grid-column:span 1; }
+      .gk-name { font-size:20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="gk-card">
+    <div class="gk-header">
+      <img src="{{ url_for('static', filename='images/School_logo.jpeg') }}" alt="Gurukul Logo"
+           style="height:70px;object-fit:contain;margin-bottom:10px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.4));"
+           onerror="this.style.display='none'">
+      <div class="gk-name">GURUKUL <em>AASHRAM</em></div>
+      <div class="gk-tag">Ulao, Begusarai, Bihar</div>
+      <div class="gk-rule"></div>
+      <div class="gk-badge">✦ Office Dashboard ✦</div>
+    </div>
+
+    <div class="gk-body">
+      <div class="gk-sec">Student Services</div>
+      <div class="gk-grid">
+
+        <a href="/admission" class="gk-btn btn-warm">
+          <span class="gk-icon">📝</span>
+          <span class="gk-main">New Admission</span>
+          <span class="gk-sub">Nayi entry darj karein</span>
+        </a>
+
+        <a href="/register" class="gk-btn btn-warm">
+          <span class="gk-icon">📋</span>
+          <span class="gk-main">Registration</span>
+          <span class="gk-sub">Student register karein</span>
+        </a>
+
+        <a href="/result_search" class="gk-btn btn-saffron">
+          <span class="gk-icon">🔍</span>
+          <div>
+            <div class="gk-main">Search Exam Result</div>
+            <div class="gk-sub">Student result dekhein</div>
+          </div>
+        </a>
+
+        <a href="/fee_login" class="gk-btn btn-forest">
+          <span class="gk-icon">💰</span>
+          <div>
+            <div class="gk-main">Fee Management</div>
+            <div class="gk-sub">Student fees update karein</div>
+          </div>
+        </a>  
+
+        <a href="/student_fee_check" class="gk-btn btn-teal">
+          <span class="gk-icon">🧾</span>
+          <div>
+            <div class="gk-main">Student Fee Check</div>
+            <div class="gk-sub">Apni fees ki status dekhein</div>
+          </div>
+        </a>
+
+        <!-- ★ NEW: Marksheet Upload -->
+        <a href="/admin_login?next=marksheet_upload" class="gk-btn btn-indigo">
+          <span class="gk-icon">📄</span>
+          <div>
+            <div class="gk-main">Marksheet Upload</div>
+            <div class="gk-sub">Report card data enter karein</div>
+          </div>
+        </a>
+
+      </div>
+
+      <div class="gk-div"></div>
+      <div class="gk-admin">
+        <div class="gk-note">Sirf authorized office use ke liye</div>
+        <a href="/admin_login" class="gk-alink">🔐 &nbsp; Admin Login / Database</a>
+      </div>
+    </div>
+
+    <div class="gk-footer">Gurukul Aashram &nbsp;✦&nbsp; Academic Session 2025–26</div>
+  </div>
+</body>
+</html>

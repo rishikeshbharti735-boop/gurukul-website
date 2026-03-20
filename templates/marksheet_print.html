@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marksheet Print – Gurukul Aashram</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@500;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d1b4b;--navy-mid:#1e3575;--gold:#c9a84c;--gold-light:#f5e6bb;--gold-pale:#fdf8ed;--green:#1b5e20;--green-mid:#2e7d32;--red:#c62828;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Crimson Text',Georgia,serif;background:#eef0f4;min-height:100vh;}
+
+/* ── SCREEN ONLY ── */
+@media screen{
+  .topbar{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-bottom:3px solid var(--gold);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:200;box-shadow:0 2px 20px rgba(0,0,0,0.3);}
+  .topbar-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--gold-light);letter-spacing:2px;}
+  .topbar-logo em{color:var(--gold);font-style:normal;}
+  .nav-link{text-decoration:none;font-family:'Cormorant Garamond',serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(245,230,187,0.7);padding:6px 14px;transition:color 0.2s;}
+  .nav-link:hover{color:var(--gold);}
+  .nav-link.active{color:var(--gold);}
+
+  .main{max-width:1100px;margin:0 auto;padding:28px 24px 50px;}
+  .page-header{margin-bottom:22px;}
+  .page-header h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--navy);letter-spacing:1px;}
+  .page-header p{font-family:'Cormorant Garamond',serif;font-size:13px;color:#888;margin-top:4px;}
+  .gold-rule{height:2px;background:linear-gradient(90deg,var(--gold),transparent);width:120px;margin:8px 0;}
+
+  .flash{background:#e8f5e9;border-left:4px solid var(--green-mid);color:var(--green);font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:700;padding:12px 18px;margin-bottom:18px;}
+
+  .card{background:white;border:1.5px solid #e8e2d0;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:22px;}
+  .card-head{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);padding:13px 20px;border-bottom:2px solid var(--gold);display:flex;align-items:center;justify-content:space-between;}
+  .card-head h3{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--gold-light);letter-spacing:1px;}
+  .card-body{padding:22px;}
+
+  /* CLASS SELECT GRID */
+  .class-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;}
+  .class-card{background:var(--gold-pale);border:2px solid rgba(201,168,76,0.3);padding:18px 10px;text-align:center;cursor:pointer;transition:all 0.2s;text-decoration:none;display:block;}
+  .class-card:hover,.class-card.selected{border-color:var(--gold);background:#fdf3dc;}
+  .class-card .cn{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--navy);}
+  .class-card .cc{font-family:'Cormorant Garamond',serif;font-size:11px;color:#888;margin-top:4px;letter-spacing:0.5px;}
+
+  /* FILTER BAR */
+  .filter-form{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .filter-sel{padding:8px 14px;border:1px solid #d4c8a0;font-family:'Cormorant Garamond',serif;font-size:13px;background:white;outline:none;cursor:pointer;}
+  .filter-sel:focus{border-color:var(--gold);}
+
+  /* READY BAR */
+  .ready-bar{background:#e8f5e9;border:1.5px solid var(--green-mid);border-left:4px solid var(--green);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px;}
+  .ready-info{font-family:'Cormorant Garamond',serif;}
+  .ready-info strong{font-family:'Playfair Display',serif;font-size:22px;color:var(--green);margin-right:6px;}
+  .ready-info span{font-size:13px;color:#888;}
+
+  /* PRINT BUTTON */
+  .print-btn{background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 100%);color:white;border:none;padding:12px 30px;font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;}
+  .print-btn:hover{letter-spacing:3px;box-shadow:0 4px 16px rgba(27,94,32,0.4);}
+
+  /* STUDENT LIST CHIPS */
+  .stu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;}
+  .stu-chip{background:var(--gold-pale);border:1px solid rgba(201,168,76,0.25);padding:10px 14px;font-size:13px;}
+  .stu-chip strong{display:block;font-family:'Cormorant Garamond',serif;font-weight:700;color:var(--navy);}
+  .stu-chip span{font-family:'Cormorant Garamond',serif;font-size:11px;color:#888;}
+
+  /* PREVIEW WRAPPER */
+  .preview-bg{background:#d5d5d5;border-radius:8px;padding:20px;max-height:750px;overflow-y:auto;margin-top:16px;}
+  .preview-bg .marksheet-page{transform:scale(0.7);transform-origin:top left;width:143%;margin-bottom:-90mm;}
+
+  .empty-state{padding:40px;text-align:center;color:#bbb;font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:1px;}
+
+  .btn-link{display:inline-block;padding:9px 20px;font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;border:2px solid;transition:all 0.2s;}
+  .btn-navy{background:var(--navy);color:var(--gold-light);border-color:var(--navy);}
+  .btn-navy:hover{background:var(--navy-mid);}
+  .btn-gold{background:var(--gold-pale);color:var(--navy);border-color:var(--gold);}
+  .btn-gold:hover{background:var(--gold);}
+
+  .no-print-block{display:block;}
+}
+
+/* ═══ MARKSHEET — screen + print ═══ */
+.marksheet-page{
+  width:210mm; min-height:297mm; padding:15mm;
+  background:#fff; border:3px double #000;
+  font-family:'Segoe UI',Arial,sans-serif;
+  page-break-after:always; position:relative; color:#000;
+}
+.marksheet-page:last-child{page-break-after:auto;}
+.ms-header{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #000;padding-bottom:14px;margin-bottom:18px;}
+.ms-logo{width:85px;height:85px;object-fit:contain;}
+.ms-htext{text-align:center;flex:1;padding:0 10px;}
+.ms-htext h1{margin:0;font-size:28px;letter-spacing:1px;font-weight:900;color:#000;font-family:Arial,sans-serif;}
+.ms-htext p{margin:2px 0;font-size:12px;font-weight:bold;color:#000;font-family:Arial,sans-serif;}
+.ms-title{font-size:18px;margin-top:10px;text-decoration:underline;font-weight:bold;text-transform:uppercase;font-family:Arial,sans-serif;}
+.ms-info{width:100%;border-collapse:collapse;margin-bottom:18px;}
+.ms-info td{border:1px solid #000;padding:9px 11px;font-size:13px;font-weight:bold;color:#000;font-family:Arial,sans-serif;}
+.ms-marks{width:100%;border-collapse:collapse;margin-bottom:18px;}
+.ms-marks th,.ms-marks td{border:1px solid #000;padding:7px;font-size:12px;text-align:center;color:#000;font-family:Arial,sans-serif;}
+.ms-marks th{background:#eef2f7;font-weight:bold;}
+.ms-marks .sc{text-align:left;padding-left:11px;font-weight:bold;}
+.ms-summary{border:1px solid #000;padding:14px 18px;line-height:2.3;font-weight:bold;font-size:14px;color:#000;font-family:Arial,sans-serif;}
+.ms-sigs{display:flex;justify-content:space-between;align-items:flex-end;margin-top:60px;padding:0 10px;}
+.ms-sig{text-align:center;width:30%;}
+.ms-sig img{width:100px;height:auto;margin-bottom:4px;}
+.ms-sig-line{border-top:2px solid #000;padding-top:6px;font-size:12px;font-weight:bold;text-transform:uppercase;color:#000;font-family:Arial,sans-serif;}
+
+/* ── PRINT ── */
+@media print{
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+  body{background:#fff !important;margin:0 !important;padding:0 !important;}
+  .topbar,.no-print-block,.page-header,.flash,.ready-bar,.card-head,.stu-grid,.class-grid,.filter-form,.btn-link,.print-btn{display:none !important;}
+  .main{padding:0 !important;max-width:none !important;margin:0 !important;}
+  .card{border:none !important;box-shadow:none !important;margin:0 !important;}
+  .card-body{padding:0 !important;}
+  .preview-bg{background:none !important;padding:0 !important;max-height:none !important;overflow:visible !important;border-radius:0 !important;display:block !important;}
+  .marksheet-page{transform:none !important;width:210mm !important;min-height:297mm !important;margin:0 !important;padding:15mm !important;box-shadow:none !important;page-break-after:always !important;display:block !important;border:3px double #000 !important;}
+  .marksheet-page:last-child{page-break-after:auto !important;}
+  @page{size:A4;margin:0;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar no-print-block">
+  <div class="topbar-logo">GURUKUL <em>AASHRAM</em></div>
+  <div style="display:flex;gap:4px;">
+    <a href="/admin_portal" class="nav-link">🏠 Admin</a>
+    <a href="/admin/marksheet-upload" class="nav-link">📤 Upload</a>
+    <a href="/admin/marksheet-print" class="nav-link active">🖨️ Print</a>
+    <a href="/logout" class="nav-link" style="color:#ff9999;">Logout</a>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="page-header no-print-block">
+    <h1>🖨️ Marksheet Print Portal</h1>
+    <div class="gold-rule"></div>
+    <p>Class select karo → section filter karo → saare students ke marksheets ek PDF mein print karo.</p>
+  </div>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}{% for msg in messages %}<div class="flash no-print-block">{{ msg }}</div>{% endfor %}{% endif %}
+  {% endwith %}
+
+  <!-- CLASS SELECTOR -->
+  <div class="card no-print-block">
+    <div class="card-head"><h3>🏫 Class Select Karo</h3></div>
+    <div class="card-body">
+      {% if all_classes %}
+      <div class="class-grid">
+        {% for cls in all_classes %}
+        <a href="/admin/marksheet-print?class={{ cls }}" class="class-card {% if selected_class == cls %}selected{% endif %}">
+          <div class="cn">CLASS {{ cls }}</div>
+          <div class="cc">Click to select</div>
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">— Koi data nahi. <a href="/admin/marksheet-upload" style="color:var(--gold);">Data upload karo →</a> —</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- SECTION FILTER + PRINT BUTTON -->
+  {% if selected_class %}
+  <div class="ready-bar no-print-block">
+    <div class="ready-info">
+      <strong>{{ records|length }}</strong>
+      <span>marksheets ready — Class {{ selected_class }}{% if selected_section %} Section {{ selected_section }}{% endif %}</span>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <!-- Section filter -->
+      <form action="/admin/marksheet-print" method="GET" class="filter-form">
+        <input type="hidden" name="class" value="{{ selected_class }}">
+        <select name="section" class="filter-sel" onchange="this.form.submit()">
+          <option value="">All Sections</option>
+          {% for sec in ['A','B','C','D'] %}
+          <option value="{{ sec }}" {% if selected_section == sec %}selected{% endif %}>Section {{ sec }}</option>
+          {% endfor %}
+        </select>
+      </form>
+      <!-- Print -->
+      <a href="/admin/marksheet-printonly?class={{ selected_class }}&section={{ selected_section }}" target="_blank" class="print-btn" style="text-decoration:none;display:inline-block;">📄 PDF Download / Print Karo</a>
+      <a href="/admin/marksheet-print" class="btn-link btn-gold">✖ Deselect</a>
+    </div>
+  </div>
+
+  <!-- STUDENT LIST PREVIEW -->
+  {% if records %}
+  <div class="card no-print-block">
+    <div class="card-head"><h3>👥 Students in Print Queue</h3></div>
+    <div class="card-body">
+      <div class="stu-grid">
+        {% for s in records %}
+        {% set gt = (s.get('maths_theory',0)|float + s.get('maths_prac',0)|float +
+                     s.get('hindi_theory',0)|float + s.get('hindi_prac',0)|float +
+                     s.get('english_theory',0)|float + s.get('english_prac',0)|float +
+                     s.get('science_theory',0)|float + s.get('science_prac',0)|float +
+                     s.get('sanskrit_theory',0)|float + s.get('sanskrit_prac',0)|float +
+                     s.get('computer_theory',0)|float + s.get('computer_prac',0)|float +
+                     s.get('gk_theory',0)|float + s.get('gk_prac',0)|float)|int %}
+        <div class="stu-chip">
+          <strong>{{ s.get('student_name','—') }}</strong>
+          <span>Roll: {{ s.get('roll_no','—') }} &nbsp;|&nbsp; {{ gt }}/600</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- MARKSHEET PREVIEW (screen) + ACTUAL PRINT OUTPUT -->
+  <div class="card no-print-block">
+    <div class="card-head"><h3>📄 Marksheet Preview</h3></div>
+    <div class="card-body" style="padding:0;">
+  {% endif %}
+
+  <!-- ════ MARKSHEETS (rendered both for preview and print) ════ -->
+  <div class="preview-bg" id="printArea">
+    {% for s in records %}
+    {% set gt = (s.get('maths_theory',0)|float + s.get('maths_prac',0)|float +
+                 s.get('hindi_theory',0)|float + s.get('hindi_prac',0)|float +
+                 s.get('english_theory',0)|float + s.get('english_prac',0)|float +
+                 s.get('science_theory',0)|float + s.get('science_prac',0)|float +
+                 s.get('sanskrit_theory',0)|float + s.get('sanskrit_prac',0)|float +
+                 s.get('computer_theory',0)|float + s.get('computer_prac',0)|float +
+                 s.get('gk_theory',0)|float + s.get('gk_prac',0)|float)|int %}
+    {% set pct = "%.2f"|format(gt/6) %}
+    {% set pos = s.get('position','') %}
+
+    <div class="marksheet-page">
+      <div class="ms-header">
+        <img src="/static/images/School_logo.jpeg" alt="Logo" class="ms-logo" onerror="this.style.display='none'">
+        <div class="ms-htext">
+          <h1>GURUKUL AASHRAM</h1>
+          <p>HEAD BRANCH: MAKARDAHI, ULAO (BEGUSARAI)</p>
+          <p>SECOND BRANCH: SONMA, PRANPUR (BEGUSARAI)</p>
+          <div class="ms-title">FINAL EXAMINATION 2025–2026<br>REPORT CARD</div>
+        </div>
+        <img src="/static/images/cbse_logo.png" alt="CBSE" class="ms-logo" onerror="this.style.display='none'">
+      </div>
+
+      <table class="ms-info">
+        <tr>
+          <td style="width:50%">STUDENT NAME: <strong>{{ s.get('student_name','')|upper }}</strong></td>
+          <td style="width:25%">CLASS: <strong>{{ s.get('class','') }}</strong></td>
+          <td style="width:25%">SECTION: <strong>{{ s.get('section','') }}</strong></td>
+        </tr>
+        <tr>
+          <td>FATHER'S NAME: <strong>{{ s.get('father_name','')|upper }}</strong></td>
+          <td colspan="2">ROLL NO.: <strong>{{ s.get('roll_no','') }}</strong></td>
+        </tr>
+      </table>
+
+      <table class="ms-marks">
+        <thead>
+          <tr><th rowspan="2" style="width:25%">Subject</th><th colspan="3">Full Marks</th><th colspan="3">Obtained Marks</th></tr>
+          <tr><th>Theory</th><th>Prac.</th><th>Total</th><th>Theory</th><th>Prac.</th><th>Total</th></tr>
+        </thead>
+        <tbody>
+          {% set subjects = [
+            ('1. Maths','maths',80,20),('2. Hindi','hindi',80,20),('3. English','english',80,20),
+            ('4. E.V.S./SCIENCE','science',80,20),('5. Sanskrit','sanskrit',80,20),
+            ('6. Computer','computer',40,10),('7. G.K.','gk',40,10)
+          ] %}
+          {% for label,kt,maxT,maxP in subjects %}
+          {% set tv = s.get(kt+'_theory','') %}
+          {% set pv = s.get(kt+'_prac','') %}
+          {% set tot = (tv|float + pv|float)|int if (tv or pv) else '—' %}
+          <tr>
+            <td class="sc">{{ label }}</td>
+            <td>{{ maxT }}</td><td>{{ maxP }}</td><td>{{ maxT+maxP }}</td>
+            <td>{{ tv if tv != '' else '—' }}</td>
+            <td>{{ pv if pv != '' else '—' }}</td>
+            <td>{{ tot }}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <td class="sc">8. Drawing</td>
+            <td>A+/A/B/C</td><td>—</td><td>—</td>
+            <td colspan="2" style="text-align:center;font-weight:bold;">{{ s.get('drawing_grade','—') or '—' }}</td>
+            <td>—</td>
+          </tr>
+          {% set gT = (s.get('maths_theory',0)|float+s.get('hindi_theory',0)|float+s.get('english_theory',0)|float+s.get('science_theory',0)|float+s.get('sanskrit_theory',0)|float+s.get('computer_theory',0)|float+s.get('gk_theory',0)|float)|int %}
+          {% set gP = (s.get('maths_prac',0)|float+s.get('hindi_prac',0)|float+s.get('english_prac',0)|float+s.get('science_prac',0)|float+s.get('sanskrit_prac',0)|float+s.get('computer_prac',0)|float+s.get('gk_prac',0)|float)|int %}
+          <tr style="background:#eef2f7;font-weight:900;">
+            <td class="sc">Grand Total</td>
+            <td><strong>480</strong></td><td><strong>120</strong></td><td><strong>600</strong></td>
+            <td>{{ gT or '—' }}</td><td>{{ gP or '—' }}</td><td>{{ gt or '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="ms-summary">
+        Position In Class –
+        {% if pos %}
+          {% set n = pos|int %}
+          {% if n % 100 in [11,12,13] %}{{ n }}th
+          {% elif n % 10 == 1 %}{{ n }}st
+          {% elif n % 10 == 2 %}{{ n }}nd
+          {% elif n % 10 == 3 %}{{ n }}rd
+          {% else %}{{ n }}th{% endif %}
+        {% else %}___________{% endif %}<br><br>
+        Aggregated Marks in Percentage (%) – {{ pct if gt > 0 else '___________' }} %
+      </div>
+
+      <div class="ms-sigs">
+        <div class="ms-sig"><div class="ms-sig-line">Parent Signature</div></div>
+        <div class="ms-sig"><div class="ms-sig-line">Class Teacher Signature</div></div>
+        <div class="ms-sig">
+          <img src="/static/images/principal_sig.png" alt="" onerror="this.style.display='none'">
+          <div class="ms-sig-line">Principal Signature</div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    {% if not records and selected_class %}
+    <div class="empty-state">— Class {{ selected_class }} mein koi student nahi mila —</div>
+    {% endif %}
+  </div>
+
+  {% if records %}
+    </div><!-- card-body -->
+    </div><!-- card -->
+  {% endif %}
+
+  {% endif %}{# end if selected_class #}
+
+  {% if not selected_class %}
+  <div class="card no-print-block">
+    <div class="card-body">
+      <div class="empty-state">
+        ⬆️ Upar se class select karo aur print karo.<br><br>
+        <a href="/admin/marksheet-upload" class="btn-link btn-navy" style="display:inline-block;margin-top:10px;">📤 Data Upload Karo</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div><!-- main -->
+</body>
+</html>

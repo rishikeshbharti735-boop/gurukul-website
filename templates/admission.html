@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Form - Gurukul Aashram</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@500;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0d1b4b;
+            --navy-mid: #1e3575;
+            --gold: #c9a84c;
+            --gold-light: #f5e6bb;
+            --gold-pale: #fdf8ed;
+            --red: #c62828;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Crimson Text', Georgia, serif;
+            background: #f0f2f5;
+            padding: 30px 16px;
+            min-height: 100vh;
+        }
+
+        /* ── MAIN CONTAINER ── */
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+            background: white;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 0 5px rgba(201,168,76,0.1), 0 8px 40px rgba(0,0,0,0.12);
+            position: relative;
+        }
+
+        /* Corner decorations */
+        .corner-deco {
+            position: absolute;
+            width: 44px;
+            height: 44px;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .corner-deco.tl { top: -1px; left: -1px; }
+        .corner-deco.tr { top: -1px; right: -1px; transform: scaleX(-1); }
+        .corner-deco.bl { bottom: -1px; left: -1px; transform: scaleY(-1); }
+        .corner-deco.br { bottom: -1px; right: -1px; transform: scale(-1); }
+
+        /* ── HEADER ── */
+        .header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+            padding: 22px 30px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .header img {
+            height: 75px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+        }
+
+        .header-center { text-align: center; flex: 1; }
+
+        .school-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--gold-light);
+            letter-spacing: 3px;
+        }
+
+        .school-name em { color: var(--gold); font-style: normal; }
+
+        .school-location {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 11px;
+            color: rgba(245,230,187,0.65);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .gold-rule {
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 10px 40px 0;
+        }
+
+        .form-badge {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 20px;
+            margin-top: 10px;
+            clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0% 50%);
+        }
+
+        /* ── FORM BODY ── */
+        .form-body {
+            padding: 28px 32px 32px;
+        }
+
+        /* ── SECTION HEADERS ── */
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 28px 0 16px;
+        }
+
+        .section-num {
+            background: var(--navy);
+            color: var(--gold);
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            font-weight: 700;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--navy);
+            flex: 1;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, var(--gold), transparent);
+        }
+
+        /* ── FORM ROWS ── */
+        .row { display: flex; gap: 16px; margin-bottom: 14px; }
+        .row-3 { display: flex; gap: 16px; margin-bottom: 14px; }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.w2 { flex: 2; }
+        .form-group.w3 { flex: 3; }
+
+        .form-group label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--navy);
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+
+        .form-group label .req { color: var(--red); }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px 12px;
+            border: 1px solid #d4c8a0;
+            border-radius: 0;
+            font-family: 'Crimson Text', serif;
+            font-size: 14px;
+            color: #1a1a2e;
+            background: #fffef9;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+            background: #fffff8;
+        }
+
+        .form-group input[readonly] {
+            background: #f5f0e8;
+            color: #666;
+        }
+
+        .form-group textarea { resize: vertical; line-height: 1.5; }
+
+        /* ── PHOTO UPLOAD BOX ── */
+        .photo-section {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            background: var(--gold-pale);
+            border: 1.5px dashed var(--gold);
+            padding: 18px 20px;
+            margin-bottom: 4px;
+        }
+
+        .photo-preview {
+            width: 90px;
+            height: 110px;
+            background: white;
+            border: 1.5px solid #d4c8a0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .photo-placeholder {
+            text-align: center;
+            color: #bbb;
+            font-size: 11px;
+            font-family: 'Cormorant Garamond', serif;
+            line-height: 1.4;
+        }
+
+        .photo-placeholder span { font-size: 28px; display: block; margin-bottom: 4px; }
+
+        .photo-info { flex: 1; }
+
+        .photo-info strong {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--navy);
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .photo-info p {
+            font-size: 11.5px;
+            color: #777;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .photo-info input[type="file"] {
+            font-size: 12px;
+            color: var(--navy);
+            cursor: pointer;
+        }
+
+        /* ── DECLARATION BOX ── */
+        .declaration-box {
+            background: #fff8f8;
+            border-left: 4px solid var(--red);
+            padding: 14px 18px;
+            margin-top: 24px;
+            font-size: 12.5px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .declaration-box strong { color: var(--red); font-family: 'Cormorant Garamond', serif; letter-spacing: 0.5px; }
+
+        /* ── SUBMIT BUTTON ── */
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+            color: var(--gold-light);
+            border: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 22px;
+            transition: all 0.25s;
+            border-top: 2px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(201,168,76,0.08);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .btn-submit:hover::before { opacity: 1; }
+        .btn-submit:hover { letter-spacing: 4px; }
+
+        /* ── BACK LINK ── */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            color: var(--navy);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-bottom: 16px;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 1; }
+
+        /* ── FOOTER ── */
+        .card-footer {
+            background: var(--navy);
+            padding: 8px;
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9px;
+            color: rgba(201,168,76,0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 600px) {
+            .row, .row-3 { flex-direction: column; gap: 10px; }
+            .form-body { padding: 20px 16px 24px; }
+            .header { gap: 10px; }
+            .header img { height: 55px; }
+            .school-name { font-size: 17px; letter-spacing: 1.5px; }
+            .photo-section { flex-direction: column; }
+            .photo-preview { width: 80px; height: 100px; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/" class="back-link" style="max-width:820px; display:block; margin: 0 auto 12px;">← Back to Dashboard</a>
+
+    <div class="container">
+
+        <!-- Corner Decorations -->
+        <div class="corner-deco tl">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2 L16 2" stroke="#c9a84c" stroke-width="2"/>
+                <path d="M2 2 L2 16" stroke="#c9a84c" stroke-width="2"/>
+                <circle cx="2" cy="2" r="2.5" fill="#c9a84c"/>
+                <path d="M7 2 Q12 7 12 12 Q7 12 2 7" stroke="#c9a84c" stroke-width="0.7" fill="none"/>
+            </svg>
+        </div>
+        <div class="corner-deco tr">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2 L16 2" stroke="#c9a84c" stroke-width="2"/>
+                <path d="M2 2 L2 16" stroke="#c9a84c" stroke-width="2"/>
+                <circle cx="2" cy="2" r="2.5" fill="#c9a84c"/>
+                <path d="M7 2 Q12 7 12 12 Q7 12 2 7" stroke="#c9a84c" stroke-width="0.7" fill="none"/>
+            </svg>
+        </div>
+        <div class="corner-deco bl">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2 L16 2" stroke="#c9a84c" stroke-width="2"/>
+                <path d="M2 2 L2 16" stroke="#c9a84c" stroke-width="2"/>
+                <circle cx="2" cy="2" r="2.5" fill="#c9a84c"/>
+                <path d="M7 2 Q12 7 12 12 Q7 12 2 7" stroke="#c9a84c" stroke-width="0.7" fill="none"/>
+            </svg>
+        </div>
+        <div class="corner-deco br">
+            <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 2 L16 2" stroke="#c9a84c" stroke-width="2"/>
+                <path d="M2 2 L2 16" stroke="#c9a84c" stroke-width="2"/>
+                <circle cx="2" cy="2" r="2.5" fill="#c9a84c"/>
+                <path d="M7 2 Q12 7 12 12 Q7 12 2 7" stroke="#c9a84c" stroke-width="0.7" fill="none"/>
+            </svg>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <img src="{{ url_for('static', filename='images/School_logo.jpeg') }}" alt="School Logo" onerror="this.style.display='none'">
+            <div class="header-center">
+                <div class="school-name">GURUKUL <em>AASHRAM</em></div>
+                <div class="school-location">Ulao, Begusarai, Bihar</div>
+                <div class="gold-rule"></div>
+                <div class="form-badge">✦ New Admission Form — 2026-27 ✦</div>
+            </div>
+            <img src="{{ url_for('static', filename='images/Cbse_logo.png') }}" alt="CBSE Logo" onerror="this.style.display='none'">
+        </div>
+
+        <!-- Form -->
+        <div class="form-body">
+        <form action="/admission" method="POST" enctype="multipart/form-data">
+
+            <!-- Basic Info Row -->
+            <div class="row" style="margin-top: 8px;">
+                <div class="form-group">
+                    <label>Academic Year</label>
+                    <input type="text" name="academic_year" value="2026-27" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Date of Admission <span class="req">*</span></label>
+                    <input type="date" name="admission_date" required>
+                </div>
+                <div class="form-group">
+                    <label>Admission Type</label>
+                    <select name="admission_type">
+                        <option value="Fresh">Fresh Admission</option>
+                        <option value="Transfer">Transfer (TC)</option>
+                        <option value="Re-Admission">Re-Admission</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Photo Upload -->
+            <div class="photo-section">
+                <div class="photo-preview" id="previewBox">
+                    <img id="previewImg" src="" alt="Preview">
+                    <div class="photo-placeholder" id="placeholder">
+                        <span>📷</span>Passport<br>Photo
+                    </div>
+                </div>
+                <div class="photo-info">
+                    <strong>📸 Student Passport Photo Upload</strong>
+                    <p>Recent passport size photo upload karein.<br>
+                    Format: JPG / PNG &nbsp;|&nbsp; Max size: 2MB<br>
+                    White / light background preferred.</p>
+                    <input type="file" name="student_photo" accept="image/*" onchange="previewPhoto(this)">
+                </div>
+            </div>
+
+            <!-- Section 1: Student Details -->
+            <div class="section-head">
+                <div class="section-num">1</div>
+                <div class="section-title">Student Personal Details</div>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:14px;">
+                <label>Student Full Name <span class="req">*</span></label>
+                <input type="text" name="student_name" placeholder="As per birth certificate" required>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Date of Birth <span class="req">*</span></label>
+                    <input type="date" name="dob" required>
+                </div>
+                <div class="form-group">
+                    <label>Gender <span class="req">*</span></label>
+                    <select name="gender" required>
+                        <option value="">Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Blood Group</label>
+                    <select name="blood_group">
+                        <option value="Not Known">Not Known</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A−</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B−</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O−</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB−</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Nationality</label>
+                    <input type="text" name="nationality" value="Indian">
+                </div>
+                <div class="form-group">
+                    <label>Religion</label>
+                    <select name="religion">
+                        <option value="">Select</option>
+                        <option value="Hindu">Hindu</option>
+                        <option value="Muslim">Muslim</option>
+                        <option value="Christian">Christian</option>
+                        <option value="Sikh">Sikh</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Caste Category</label>
+                    <select name="caste_category">
+                        <option value="">Select</option>
+                        <option value="General">General</option>
+                        <option value="OBC">OBC</option>
+                        <option value="SC">SC</option>
+                        <option value="ST">ST</option>
+                        <option value="EWS">EWS</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Aadhar Number</label>
+                    <input type="text" name="aadhar_no" maxlength="12" placeholder="12 Digit Aadhar No.">
+                </div>
+                <div class="form-group">
+                    <label>Class for Admission <span class="req">*</span></label>
+                    <select name="admission_class" required>
+                        <option value="">Select Class</option>
+                        <option value="Nursery">Nursery</option>
+                        <option value="L.KG">L.KG</option>
+                        <option value="U.KG">U.KG</option>
+                        <option value="1st">Class 1st</option>
+                        <option value="2nd">Class 2nd</option>
+                        <option value="3rd">Class 3rd</option>
+                        <option value="4th">Class 4th</option>
+                        <option value="5th">Class 5th</option>
+                        <option value="6th">Class 6th</option>
+                        <option value="7th">Class 7th</option>
+                        <option value="8th">Class 8th</option>
+                        <option value="9th">Class 9th</option>
+                        <option value="10th">Class 10th</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Section</label>
+                    <select name="section">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Previous School Name</label>
+                    <input type="text" name="prev_school" placeholder="If transfer / not applicable for Nursery">
+                </div>
+                <div class="form-group">
+                    <label>TC / SLC Number</label>
+                    <input type="text" name="tc_no" placeholder="Transfer Certificate No.">
+                </div>
+            </div>
+
+            <!-- Section 2: Parent Details -->
+            <div class="section-head">
+                <div class="section-num">2</div>
+                <div class="section-title">Parent / Guardian Details</div>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Father's Full Name <span class="req">*</span></label>
+                    <input type="text" name="father_name" required>
+                </div>
+                <div class="form-group">
+                    <label>Father's Occupation</label>
+                    <input type="text" name="father_occ" placeholder="e.g. Farmer, Teacher, Business">
+                </div>
+                <div class="form-group">
+                    <label>Father's Qualification</label>
+                    <input type="text" name="father_qual" placeholder="e.g. B.A., 10th Pass">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Mother's Full Name <span class="req">*</span></label>
+                    <input type="text" name="mother_name" required>
+                </div>
+                <div class="form-group">
+                    <label>Mother's Occupation</label>
+                    <input type="text" name="mother_occ" placeholder="e.g. Homemaker, Teacher">
+                </div>
+                <div class="form-group">
+                    <label>Annual Family Income (₹)</label>
+                    <input type="text" name="family_income" placeholder="e.g. 1,50,000">
+                </div>
+            </div>
+
+            <!-- Section 3: Contact & Address -->
+            <div class="section-head">
+                <div class="section-num">3</div>
+                <div class="section-title">Contact & Address</div>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>WhatsApp / Mobile No. <span class="req">*</span></label>
+                    <input type="tel" name="whatsapp_no" placeholder="Active WhatsApp number" required>
+                </div>
+                <div class="form-group">
+                    <label>Alternate Mobile No.</label>
+                    <input type="tel" name="alt_mobile" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="Optional">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group w2">
+                    <label>Permanent Address <span class="req">*</span></label>
+                    <textarea name="perm_address" rows="2" placeholder="House No., Village / Mohalla, Post Office" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>District</label>
+                    <input type="text" name="district" value="Begusarai">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>State</label>
+                    <input type="text" name="state" value="Bihar">
+                </div>
+                <div class="form-group">
+                    <label>PIN Code</label>
+                    <input type="text" name="pincode" maxlength="6" placeholder="6-digit PIN">
+                </div>
+                <div class="form-group">
+                    <label>Transport Required</label>
+                    <select name="transport">
+                        <option value="No">No</option>
+                        <option value="Yes">Yes — School Bus</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section 4: Fee -->
+            <div class="section-head">
+                <div class="section-num">4</div>
+                <div class="section-title">Fee Payment at Admission</div>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Admission Fee Paid (₹)</label>
+                    <input type="number" name="paid_amount" placeholder="Amount in ₹">
+                </div>
+                <div class="form-group">
+                    <label>Payment Mode</label>
+                    <select name="payment_mode">
+                        <option value="Cash">Cash</option>
+                        <option value="Online">Online / UPI</option>
+                        <option value="Cheque">Cheque / DD</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Receipt / Transaction No.</label>
+                    <input type="text" name="txn_no" placeholder="If applicable">
+                </div>
+            </div>
+
+            <!-- Declaration -->
+            <div class="declaration-box">
+                <strong>Declaration / घोषणा:</strong>
+                <p style="margin-top:6px;">I / We hereby declare that all the information provided above is true and correct to the best of my knowledge. The student will abide by all rules and regulations of the school. Any false information may result in cancellation of admission.</p>
+                <div style="display:flex; gap:30px; margin-top:14px;">
+                    <div style="flex:1; border-top:1px solid #ddd; padding-top:6px; font-size:11px; color:#999; text-align:center;">Parent / Guardian Signature</div>
+                    <div style="flex:1; border-top:1px solid #ddd; padding-top:6px; font-size:11px; color:#999; text-align:center;">Date</div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                🚀 &nbsp; Submit & Generate Admission Receipt
+            </button>
+
+        </form>
+        </div>
+
+        <div class="card-footer">
+            Gurukul Aashram, Ulao, Begusarai, Bihar &nbsp;✦&nbsp; Academic Session 2026–27
+        </div>
+
+    </div>
+
+    <script>
+        function previewPhoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('previewImg');
+                    const placeholder = document.getElementById('placeholder');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Auto-set today's date
+        const today = new Date().toISOString().split('T')[0];
+        const admDate = document.querySelector('input[name="admission_date"]');
+        if (admDate && !admDate.value) admDate.value = today;
+    </script>
+</body>
+</html>

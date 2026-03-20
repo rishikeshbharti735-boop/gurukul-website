@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marksheet Upload – Gurukul Aashram</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@500;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root { --navy:#0d1b4b; --navy-mid:#1e3575; --gold:#c9a84c; --gold-light:#f5e6bb; --gold-pale:#fdf8ed; --green:#1b5e20; --green-mid:#2e7d32; --red:#c62828; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Crimson Text',Georgia,serif;background:#eef0f4;min-height:100vh;}
+
+.topbar{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);border-bottom:3px solid var(--gold);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.3);}
+.topbar-logo{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--gold-light);letter-spacing:2px;}
+.topbar-logo em{color:var(--gold);font-style:normal;}
+.nav-link{text-decoration:none;font-family:'Cormorant Garamond',serif;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(245,230,187,0.7);padding:6px 14px;transition:color 0.2s;}
+.nav-link:hover{color:var(--gold);}
+.nav-link.active{color:var(--gold);}
+
+.main{max-width:1100px;margin:0 auto;padding:28px 24px 50px;}
+.page-header{margin-bottom:22px;}
+.page-header h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--navy);letter-spacing:1px;}
+.page-header p{font-family:'Cormorant Garamond',serif;font-size:13px;color:#888;margin-top:4px;}
+.gold-rule{height:2px;background:linear-gradient(90deg,var(--gold),transparent);width:120px;margin:8px 0;}
+
+.flash{background:#e8f5e9;border-left:4px solid var(--green-mid);color:var(--green);font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:700;padding:12px 18px;margin-bottom:18px;}
+.flash.err{background:#ffebee;border-color:var(--red);color:var(--red);}
+
+.tab-bar{display:flex;gap:4px;border-bottom:2px solid var(--gold);margin-bottom:24px;}
+.tab{padding:10px 24px;background:white;border:1px solid #ddd;border-bottom:none;font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#888;cursor:pointer;position:relative;top:2px;transition:all 0.2s;}
+.tab:hover{color:var(--navy);}
+.tab.active{background:var(--navy);color:var(--gold);border-color:var(--gold);border-bottom:2px solid var(--navy);}
+
+.card{background:white;border:1.5px solid #e8e2d0;box-shadow:0 2px 12px rgba(0,0,0,0.06);margin-bottom:22px;}
+.card-head{background:linear-gradient(135deg,var(--navy) 0%,var(--navy-mid) 100%);padding:13px 20px;border-bottom:2px solid var(--gold);display:flex;align-items:center;justify-content:space-between;}
+.card-head h3{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--gold-light);letter-spacing:1px;}
+.card-body{padding:22px;}
+
+.upload-zone{border:2px dashed rgba(13,27,75,0.25);border-radius:6px;padding:48px 30px;text-align:center;background:var(--gold-pale);position:relative;transition:all 0.2s;}
+.upload-zone:hover{border-color:var(--gold);background:#fdf3dc;}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-zone .icon{font-size:42px;margin-bottom:12px;}
+.upload-zone h3{font-family:'Playfair Display',serif;font-size:16px;color:var(--navy);margin-bottom:6px;}
+.upload-zone p{font-family:'Cormorant Garamond',serif;font-size:13px;color:#888;}
+
+.chip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:14px 0;}
+.chip{background:var(--gold-pale);border:1px solid rgba(201,168,76,0.35);padding:7px 12px;font-family:'Cormorant Garamond',serif;font-size:12px;color:var(--navy);font-weight:700;}
+.chip span{display:block;font-size:10px;color:#888;font-weight:400;margin-top:2px;}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-grid.three{grid-template-columns:1fr 1fr 1fr;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.full{grid-column:1/-1;}
+.form-group label{font-family:'Cormorant Garamond',serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--navy);opacity:0.7;}
+.form-group input,.form-group select{padding:9px 12px;border:1px solid #d4c8a0;font-family:'Crimson Text',serif;font-size:14px;background:white;outline:none;transition:border-color 0.2s;}
+.form-group input:focus,.form-group select:focus{border-color:var(--gold);}
+input::placeholder{color:#aaa;}
+
+.marks-tbl{width:100%;border-collapse:collapse;margin:12px 0;}
+.marks-tbl th{background:var(--navy);color:var(--gold-light);font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:9px 8px;text-align:center;}
+.marks-tbl th:first-child{text-align:left;padding-left:12px;}
+.marks-tbl td{border-bottom:1px solid #f0ebe0;padding:6px;text-align:center;font-size:13px;}
+.marks-tbl td:first-child{text-align:left;padding-left:12px;font-family:'Cormorant Garamond',serif;font-weight:700;font-size:12px;color:var(--navy);}
+.marks-tbl td.fix{color:#aaa;font-family:'Cormorant Garamond',serif;font-size:12px;}
+.marks-tbl tr:nth-child(even) td{background:#fafaf7;}
+.marks-tbl tr.gt td{background:var(--gold-pale);font-weight:700;color:var(--navy);}
+.marks-tbl input[type=number]{width:68px;padding:5px 7px;font-size:12px;text-align:center;border:1px solid #d4c8a0;font-family:'Crimson Text',serif;}
+.marks-tbl select{width:100px;padding:5px 8px;font-size:12px;border:1px solid #d4c8a0;font-family:'Crimson Text',serif;}
+
+.btn{display:inline-block;padding:10px 22px;font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border:2px solid;text-decoration:none;transition:all 0.2s;}
+.btn-navy{background:var(--navy);color:var(--gold-light);border-color:var(--navy);}
+.btn-navy:hover{background:var(--navy-mid);}
+.btn-gold{background:var(--gold-pale);color:var(--navy);border-color:var(--gold);}
+.btn-gold:hover{background:var(--gold);}
+.btn-green{background:var(--green);color:white;border-color:var(--green);}
+.btn-green:hover{background:var(--green-mid);}
+.btn-red{background:#ffebee;color:var(--red);border-color:var(--red);}
+.btn-red:hover{background:var(--red);color:white;}
+.btn-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:16px;}
+
+.dtbl{width:100%;border-collapse:collapse;font-size:13px;}
+.dtbl thead th{background:var(--navy);color:var(--gold-light);font-family:'Cormorant Garamond',serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:9px 12px;text-align:left;}
+.dtbl tbody tr{border-bottom:1px solid #f0ebe0;}
+.dtbl tbody tr:nth-child(even){background:#fafaf7;}
+.dtbl tbody tr:hover{background:var(--gold-pale);}
+.dtbl tbody td{padding:8px 12px;font-size:13px;color:#2a2a3e;}
+.dtbl tfoot td{background:var(--gold-pale);font-family:'Cormorant Garamond',serif;font-weight:700;font-size:12px;color:var(--navy);padding:9px 12px;border-top:2px solid var(--gold);}
+.badge-cls{display:inline-block;background:var(--gold-pale);border:1px solid var(--gold);color:#7a5c00;font-family:'Cormorant Garamond',serif;font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 8px;}
+
+.section-off{display:none;}
+@media(max-width:768px){.form-grid,.form-grid.three{grid-template-columns:1fr;}.marks-tbl input[type=number]{width:50px;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">GURUKUL <em>AASHRAM</em></div>
+  <div style="display:flex;gap:4px;">
+    <a href="/admin_portal" class="nav-link">🏠 Admin</a>
+    <a href="/admin/marksheet-upload" class="nav-link active">📤 Upload</a>
+    <a href="/admin/marksheet-print" class="nav-link">🖨️ Print</a>
+    <a href="/logout" class="nav-link" style="color:#ff9999;">Logout</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="page-header">
+    <h1>📤 Marksheet Data Upload</h1>
+    <div class="gold-rule"></div>
+    <p>Bulk Excel upload ya manually enter karo. Data server pe <strong>marksheet_data.xlsx</strong> mein save hoga.</p>
+  </div>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}{% for msg in messages %}<div class="flash">{{ msg }}</div>{% endfor %}{% endif %}
+  {% endwith %}
+
+  <div class="tab-bar">
+    <div class="tab active" id="tab-bulk"    onclick="switchTab('bulk')">📊 Bulk Excel Upload</div>
+    <div class="tab"        id="tab-manual"  onclick="switchTab('manual')">✏️ Manual Entry</div>
+    <div class="tab"        id="tab-records" onclick="switchTab('records')">📋 Saved Records ({{ records|length }})</div>
+  </div>
+
+  <!-- BULK -->
+  <div id="sec-bulk">
+    <div class="card">
+      <div class="card-head"><h3>📁 Excel / CSV Upload</h3></div>
+      <div class="card-body">
+        <form action="/admin/marksheet-upload" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="action" value="bulk_upload">
+          <div class="upload-zone">
+            <input type="file" name="excel_file" accept=".xlsx,.xls,.csv" required>
+            <div class="icon">📊</div>
+            <h3>File Drop Karo Ya Click Karo</h3>
+            <p>Supported: .xlsx, .xls, .csv</p>
+          </div>
+          <div class="btn-row">
+            <button type="submit" class="btn btn-green">⬆️ Upload & Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>📌 Required Column Names</h3></div>
+      <div class="card-body">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:13px;color:#888;margin-bottom:12px;">Excel mein <strong style="color:var(--navy);">exactly ye columns</strong> hone chahiye:</p>
+        <div class="chip-grid">
+          <div class="chip">student_name<span>Required</span></div>
+          <div class="chip">father_name<span>Required</span></div>
+          <div class="chip">class<span>Required (I–X)</span></div>
+          <div class="chip">section<span>A / B / C / D</span></div>
+          <div class="chip">roll_no<span>Required</span></div>
+          <div class="chip">maths_theory<span>Max: 80</span></div>
+          <div class="chip">maths_prac<span>Max: 20</span></div>
+          <div class="chip">hindi_theory<span>Max: 80</span></div>
+          <div class="chip">hindi_prac<span>Max: 20</span></div>
+          <div class="chip">english_theory<span>Max: 80</span></div>
+          <div class="chip">english_prac<span>Max: 20</span></div>
+          <div class="chip">science_theory<span>Max: 80</span></div>
+          <div class="chip">science_prac<span>Max: 20</span></div>
+          <div class="chip">sanskrit_theory<span>Max: 80</span></div>
+          <div class="chip">sanskrit_prac<span>Max: 20</span></div>
+          <div class="chip">computer_theory<span>Max: 40</span></div>
+          <div class="chip">computer_prac<span>Max: 10</span></div>
+          <div class="chip">gk_theory<span>Max: 40</span></div>
+          <div class="chip">gk_prac<span>Max: 10</span></div>
+          <div class="chip">drawing_grade<span>A+ / A / B / C</span></div>
+          <div class="chip">position<span>1, 2, 3 ...</span></div>
+        </div>
+        <div class="btn-row">
+          <a href="/admin/download-marksheet-template" class="btn btn-gold">⬇️ Sample Template Download</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANUAL -->
+  <div id="sec-manual" class="section-off">
+    <div class="card">
+      <div class="card-head"><h3>👤 Student Information</h3></div>
+      <div class="card-body">
+        <form action="/admin/marksheet-upload" method="POST" id="mf">
+          <input type="hidden" name="action" value="manual_save">
+          <div class="form-grid three" style="margin-bottom:16px;">
+            <div class="form-group full"><label>Student Name *</label><input type="text" name="student_name" placeholder="Poora naam" required></div>
+            <div class="form-group"><label>Father's Name *</label><input type="text" name="father_name" placeholder="Father ka naam" required></div>
+            <div class="form-group"><label>Class *</label>
+              <select name="class" required>
+                <option value="">— Class —</option>
+                <option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option>
+                <option>VI</option><option>VII</option><option>VIII</option><option>IX</option><option>X</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Section</label>
+              <select name="section"><option value="">—</option><option>A</option><option>B</option><option>C</option><option>D</option></select>
+            </div>
+            <div class="form-group"><label>Roll Number *</label><input type="text" name="roll_no" placeholder="e.g. 12" required></div>
+            <div class="form-group"><label>Position in Class</label><input type="number" name="position" min="1" placeholder="e.g. 1"></div>
+          </div>
+          <table class="marks-tbl">
+            <thead><tr><th style="width:22%">Subject</th><th>Full Th.</th><th>Full Pr.</th><th>Full Tot.</th><th>Obt. Theory</th><th>Obt. Prac.</th><th>Total</th></tr></thead>
+            <tbody>
+              <tr><td>1. Maths</td><td class="fix">80</td><td class="fix">20</td><td class="fix">100</td>
+                <td><input type="number" name="maths_theory" min="0" max="80" oninput="calc()"></td>
+                <td><input type="number" name="maths_prac" min="0" max="20" oninput="calc()"></td>
+                <td id="r1" class="fix">—</td></tr>
+              <tr><td>2. Hindi</td><td class="fix">80</td><td class="fix">20</td><td class="fix">100</td>
+                <td><input type="number" name="hindi_theory" min="0" max="80" oninput="calc()"></td>
+                <td><input type="number" name="hindi_prac" min="0" max="20" oninput="calc()"></td>
+                <td id="r2" class="fix">—</td></tr>
+              <tr><td>3. English</td><td class="fix">80</td><td class="fix">20</td><td class="fix">100</td>
+                <td><input type="number" name="english_theory" min="0" max="80" oninput="calc()"></td>
+                <td><input type="number" name="english_prac" min="0" max="20" oninput="calc()"></td>
+                <td id="r3" class="fix">—</td></tr>
+              <tr><td>4. EVS/Science</td><td class="fix">80</td><td class="fix">20</td><td class="fix">100</td>
+                <td><input type="number" name="science_theory" min="0" max="80" oninput="calc()"></td>
+                <td><input type="number" name="science_prac" min="0" max="20" oninput="calc()"></td>
+                <td id="r4" class="fix">—</td></tr>
+              <tr><td>5. Sanskrit</td><td class="fix">80</td><td class="fix">20</td><td class="fix">100</td>
+                <td><input type="number" name="sanskrit_theory" min="0" max="80" oninput="calc()"></td>
+                <td><input type="number" name="sanskrit_prac" min="0" max="20" oninput="calc()"></td>
+                <td id="r5" class="fix">—</td></tr>
+              <tr><td>6. Computer</td><td class="fix">40</td><td class="fix">10</td><td class="fix">50</td>
+                <td><input type="number" name="computer_theory" min="0" max="40" oninput="calc()"></td>
+                <td><input type="number" name="computer_prac" min="0" max="10" oninput="calc()"></td>
+                <td id="r6" class="fix">—</td></tr>
+              <tr><td>7. G.K.</td><td class="fix">40</td><td class="fix">10</td><td class="fix">50</td>
+                <td><input type="number" name="gk_theory" min="0" max="40" oninput="calc()"></td>
+                <td><input type="number" name="gk_prac" min="0" max="10" oninput="calc()"></td>
+                <td id="r7" class="fix">—</td></tr>
+              <tr><td>8. Drawing</td><td class="fix" colspan="2">Grade Only</td><td class="fix">—</td>
+                <td colspan="2" style="text-align:center">
+                  <select name="drawing_grade"><option value="">Grade</option><option>A+</option><option>A</option><option>B</option><option>C</option></select>
+                </td><td class="fix">—</td></tr>
+              <tr class="gt"><td>Grand Total</td><td>480</td><td>120</td><td>600</td>
+                <td id="g-t">—</td><td id="g-p">—</td><td id="g-tot">—</td></tr>
+            </tbody>
+          </table>
+          <div class="btn-row">
+            <button type="submit" class="btn btn-green">💾 Save Record</button>
+            <button type="button" class="btn btn-gold" onclick="document.getElementById('mf').reset();clearT();">🗑️ Clear</button>
+            <a href="/admin/marksheet-print" class="btn btn-navy">🖨️ Print Portal →</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECORDS -->
+  <div id="sec-records" class="section-off">
+    <div class="card">
+      <div class="card-head">
+        <h3>📋 Saved Records</h3>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:11px;color:var(--gold);letter-spacing:1px;">{{ records|length }} students</span>
+      </div>
+      <div class="card-body" style="padding:0;">
+        {% if records %}
+        <div style="padding:12px 22px;background:var(--gold-pale);border-bottom:1px solid #e8e2d0;display:flex;gap:10px;flex-wrap:wrap;">
+          <form action="/admin/marksheet-upload" method="POST" style="display:inline;" onsubmit="return confirm('Saara data delete?')">
+            <input type="hidden" name="action" value="clear_all">
+            <button type="submit" class="btn btn-red" style="padding:6px 14px;font-size:11px;">🗑️ Saara Clear</button>
+          </form>
+          <a href="/admin/marksheet-print" class="btn btn-navy" style="padding:6px 14px;font-size:11px;">🖨️ Print Portal</a>
+        </div>
+        <div style="overflow-x:auto;">
+        <table class="dtbl">
+          <thead><tr><th>#</th><th>Name</th><th>Father</th><th>Class</th><th>Sec</th><th>Roll</th><th>Grand Total</th><th>%</th><th>Del</th></tr></thead>
+          <tbody>
+            {% for row in records %}
+            {% set gt = (row.get('maths_theory',0)|float + row.get('maths_prac',0)|float +
+                         row.get('hindi_theory',0)|float + row.get('hindi_prac',0)|float +
+                         row.get('english_theory',0)|float + row.get('english_prac',0)|float +
+                         row.get('science_theory',0)|float + row.get('science_prac',0)|float +
+                         row.get('sanskrit_theory',0)|float + row.get('sanskrit_prac',0)|float +
+                         row.get('computer_theory',0)|float + row.get('computer_prac',0)|float +
+                         row.get('gk_theory',0)|float + row.get('gk_prac',0)|float)|int %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td><strong>{{ row.get('student_name','—') }}</strong></td>
+              <td>{{ row.get('father_name','—') }}</td>
+              <td><span class="badge-cls">{{ row.get('class','—') }}</span></td>
+              <td>{{ row.get('section','—') }}</td>
+              <td>{{ row.get('roll_no','—') }}</td>
+              <td>{{ gt }}/600</td>
+              <td>{{ "%.1f"|format(gt/6) }}%</td>
+              <td>
+                <form action="/admin/marksheet-upload" method="POST" style="display:inline;" onsubmit="return confirm('Delete?')">
+                  <input type="hidden" name="action" value="delete_record">
+                  <input type="hidden" name="index" value="{{ loop.index0 }}">
+                  <button type="submit" style="background:#ffebee;border:1px solid var(--red);color:var(--red);padding:3px 9px;font-family:'Cormorant Garamond',serif;font-size:10px;font-weight:700;cursor:pointer;">🗑</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot><tr><td colspan="6">Total</td><td colspan="3">{{ records|length }} students</td></tr></tfoot>
+        </table>
+        </div>
+        {% else %}
+        <div style="padding:50px;text-align:center;color:#bbb;font-family:'Cormorant Garamond',serif;font-size:14px;letter-spacing:1px;">— Koi record nahi. Upload ya manual entry karo —</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(t){
+  ['bulk','manual','records'].forEach(id=>{
+    document.getElementById('sec-'+id).classList.toggle('section-off',id!==t);
+    document.getElementById('tab-'+id).classList.toggle('active',id===t);
+  });
+}
+const ROWS=[['maths_theory','maths_prac','r1'],['hindi_theory','hindi_prac','r2'],
+  ['english_theory','english_prac','r3'],['science_theory','science_prac','r4'],
+  ['sanskrit_theory','sanskrit_prac','r5'],['computer_theory','computer_prac','r6'],
+  ['gk_theory','gk_prac','r7']];
+function calc(){
+  let st=0,sp=0;
+  ROWS.forEach(([tn,pn,tid])=>{
+    const t=parseFloat(document.querySelector(`[name="${tn}"]`).value)||0;
+    const p=parseFloat(document.querySelector(`[name="${pn}"]`).value)||0;
+    document.getElementById(tid).textContent=(t||p)?t+p:'—';
+    st+=t;sp+=p;
+  });
+  document.getElementById('g-t').textContent=st||'—';
+  document.getElementById('g-p').textContent=sp||'—';
+  document.getElementById('g-tot').textContent=(st+sp)||'—';
+}
+function clearT(){ROWS.forEach(([,,tid])=>document.getElementById(tid).textContent='—');['g-t','g-p','g-tot'].forEach(id=>document.getElementById(id).textContent='—');}
+const h=location.hash.replace('#','');
+if(['bulk','manual','records'].includes(h))switchTab(h);
+</script>
+</body>
+</html>

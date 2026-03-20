@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fee Status - Gurukul Aashram</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@500;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0d1b4b; --navy-mid: #1e3575;
+            --gold: #c9a84c; --gold-light: #f5e6bb; --gold-pale: #fdf8ed;
+            --teal: #00838f; --teal-dark: #00575f;
+            --green: #2e7d32; --red: #c62828;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Crimson Text', Georgia, serif;
+            min-height: 100vh; background: var(--navy);
+            display: flex; align-items: flex-start; justify-content: center;
+            padding: 30px 20px; position: relative; overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image:
+                radial-gradient(ellipse at 20% 30%, rgba(201,168,76,0.07) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(30,53,117,0.5) 0%, transparent 50%),
+                repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(201,168,76,0.02) 40px, rgba(201,168,76,0.02) 41px);
+            pointer-events: none; z-index: 0;
+        }
+        body::after {
+            content: 'GURUKUL';
+            position: fixed; bottom: -20px; right: -30px;
+            font-family: 'Playfair Display', serif;
+            font-size: 180px; font-weight: 900;
+            color: rgba(201,168,76,0.04);
+            pointer-events: none; z-index: 0; line-height: 1;
+        }
+
+        /* ── CARD ── */
+        .main-card {
+            width: 100%; max-width: 480px;
+            background: var(--gold-pale);
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 0 6px rgba(201,168,76,0.10), 0 32px 80px rgba(0,0,0,0.5);
+            position: relative; z-index: 1; overflow: hidden;
+        }
+        .main-card::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: repeating-linear-gradient(45deg, transparent, transparent 28px, rgba(201,168,76,0.025) 28px, rgba(201,168,76,0.025) 29px);
+            pointer-events: none; z-index: 0;
+        }
+
+        /* Corners */
+        .corner { position: absolute; width: 36px; height: 36px; pointer-events: none; z-index: 3; }
+        .corner.tl { top:-1px; left:-1px; }
+        .corner.tr { top:-1px; right:-1px; transform:scaleX(-1); }
+        .corner.bl { bottom:-1px; left:-1px; transform:scaleY(-1); }
+        .corner.br { bottom:-1px; right:-1px; transform:scale(-1); }
+
+        /* ── HEADER ── */
+        .card-header {
+            background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
+            border-bottom: 3px solid var(--gold);
+            padding: 20px 24px 16px; text-align: center;
+            position: relative; z-index: 2;
+        }
+        .card-header::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .header-logos {
+            display: flex; align-items: center; justify-content: center; gap: 14px;
+            margin-bottom: 10px; position: relative; z-index: 1;
+        }
+        .header-logo { height: 55px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); }
+        .school-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 19px; font-weight: 900;
+            color: var(--gold-light); letter-spacing: 2.5px;
+            position: relative; z-index: 1;
+        }
+        .school-name em { color: var(--gold); font-style: normal; }
+        .school-loc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9px; color: rgba(245,230,187,0.55);
+            letter-spacing: 2px; text-transform: uppercase; margin-top: 3px;
+            position: relative; z-index: 1;
+        }
+        .gold-rule {
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 10px 30px 0; position: relative; z-index: 1;
+        }
+        .portal-badge {
+            display: inline-block;
+            background: var(--gold); color: var(--navy);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+            padding: 4px 18px; margin-top: 10px; border-radius: 20px;
+            position: relative; z-index: 1;
+            box-shadow: 0 2px 10px rgba(201,168,76,0.3);
+        }
+
+        /* ── BODY ── */
+        .card-body { padding: 22px 24px 18px; position: relative; z-index: 2; }
+
+        .search-icon {
+            width: 46px; height: 46px;
+            background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+            border: 2px solid var(--gold); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; margin: 0 auto 12px;
+            box-shadow: 0 4px 16px rgba(0,100,110,0.3);
+        }
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 15px; font-weight: 700; color: var(--navy);
+            text-align: center; letter-spacing: 1px; margin-bottom: 3px;
+        }
+        .card-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 10.5px; color: #aaa;
+            text-align: center; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px;
+        }
+
+        /* Messages */
+        .error-msg {
+            background: #ffebee; border-left: 3px solid var(--red);
+            color: var(--red); font-family: 'Cormorant Garamond', serif;
+            font-size: 12px; font-weight: 700; padding: 9px 14px; margin-bottom: 16px;
+        }
+
+        /* ── FORM ── */
+        .field-group { margin-bottom: 13px; }
+        .field-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--navy); opacity: 0.6; display: block; margin-bottom: 5px;
+        }
+        .field-group input {
+            width: 100%; padding: 10px 13px;
+            border: 1.5px solid #d4c8a0;
+            font-family: 'Crimson Text', serif; font-size: 15px; color: var(--navy);
+            background: white; outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .field-group input:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(0,131,143,0.12);
+            background: #f0fafb;
+        }
+        .field-group input::placeholder { color: #ccc; font-style: italic; }
+
+        .submit-btn {
+            width: 100%; padding: 12px;
+            background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal) 100%);
+            color: white; border: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+            cursor: pointer; margin-top: 4px;
+            transition: all 0.25s; border-top: 1px solid rgba(255,255,255,0.15);
+        }
+        .submit-btn:hover { letter-spacing: 4px; opacity: 0.92; }
+
+        /* ── DIVIDER ── */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(201,168,76,0.4), transparent);
+            margin: 20px 0;
+        }
+
+        /* ── RESULT SECTION ── */
+        .result-section { margin-top: 4px; }
+
+        .result-header {
+            background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+            color: var(--gold-light);
+            padding: 10px 16px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+            border-left: 3px solid var(--gold);
+            margin-bottom: 12px;
+        }
+
+        /* Student info grid */
+        .info-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 8px; margin-bottom: 14px;
+        }
+        .info-cell {
+            background: white; border: 1px solid #e8ddb0;
+            padding: 8px 12px;
+        }
+        .info-cell .lbl {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--navy); opacity: 0.5; margin-bottom: 2px;
+        }
+        .info-cell .val {
+            font-family: 'Crimson Text', serif;
+            font-size: 14px; color: var(--navy); font-weight: 600;
+        }
+        .info-cell.full { grid-column: span 2; }
+
+        /* Fee summary cards */
+        .fee-summary {
+            display: grid; grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px; margin-bottom: 14px;
+        }
+        .fee-card {
+            padding: 10px 10px 8px; text-align: center;
+        }
+        .fee-card .fee-lbl {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            opacity: 0.7; margin-bottom: 4px;
+        }
+        .fee-card .fee-val {
+            font-family: 'Playfair Display', serif;
+            font-size: 17px; font-weight: 700;
+        }
+        .fc-total { background: var(--navy); color: var(--gold-light); border: 1px solid rgba(201,168,76,0.2); }
+        .fc-paid  { background: #e8f5e9; color: var(--green); border: 1px solid rgba(46,125,50,0.2); }
+        .fc-dues  { border: 1px solid; }
+        .fc-dues.ok   { background: #e8f5e9; color: var(--green); border-color: rgba(46,125,50,0.2); }
+        .fc-dues.warn { background: #ffebee; color: var(--red);   border-color: rgba(198,40,40,0.2); }
+
+        /* Payment history table */
+        .hist-table {
+            width: 100%; border-collapse: collapse;
+            font-family: 'Crimson Text', serif; font-size: 13.5px;
+        }
+        .hist-table thead tr {
+            background: var(--teal-dark); color: white;
+        }
+        .hist-table th {
+            padding: 7px 10px; font-family: 'Cormorant Garamond', serif;
+            font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+            text-align: left;
+        }
+        .hist-table td { padding: 7px 10px; border-bottom: 1px solid #e8ddb0; color: var(--navy); }
+        .hist-table tr:nth-child(even) td { background: rgba(201,168,76,0.05); }
+        .hist-table .amt { font-weight: 700; color: var(--green); }
+
+        .no-history {
+            text-align: center; padding: 14px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 12px; color: #aaa; letter-spacing: 1px;
+            background: white; border: 1px solid #e8ddb0;
+        }
+
+        /* Note */
+        .info-note {
+            background: rgba(0,131,143,0.07); border: 1px solid rgba(0,131,143,0.2);
+            padding: 9px 13px; margin-top: 14px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 11px; color: var(--teal-dark); letter-spacing: 0.3px; line-height: 1.6;
+        }
+
+        /* Back */
+        .back-row { text-align: center; margin-top: 14px; }
+        .back-link {
+            text-decoration: none; font-family: 'Cormorant Garamond', serif;
+            font-size: 10.5px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--navy); opacity: 0.35; transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 0.8; }
+
+        /* Footer */
+        .card-footer {
+            background: var(--navy); border-top: 2px solid var(--gold);
+            padding: 7px; text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 8.5px; color: rgba(201,168,76,0.4);
+            letter-spacing: 2px; text-transform: uppercase;
+            position: relative; z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+
+    <!-- Corners -->
+    <div class="corner tl"><svg viewBox="0 0 36 36" fill="none"><path d="M2 2 L13 2" stroke="#c9a84c" stroke-width="1.8"/><path d="M2 2 L2 13" stroke="#c9a84c" stroke-width="1.8"/><circle cx="2" cy="2" r="2" fill="#c9a84c"/><path d="M5 2 Q9 5 9 9 Q5 9 2 5" stroke="#c9a84c" stroke-width="0.6" fill="none"/></svg></div>
+    <div class="corner tr"><svg viewBox="0 0 36 36" fill="none"><path d="M2 2 L13 2" stroke="#c9a84c" stroke-width="1.8"/><path d="M2 2 L2 13" stroke="#c9a84c" stroke-width="1.8"/><circle cx="2" cy="2" r="2" fill="#c9a84c"/><path d="M5 2 Q9 5 9 9 Q5 9 2 5" stroke="#c9a84c" stroke-width="0.6" fill="none"/></svg></div>
+    <div class="corner bl"><svg viewBox="0 0 36 36" fill="none"><path d="M2 2 L13 2" stroke="#c9a84c" stroke-width="1.8"/><path d="M2 2 L2 13" stroke="#c9a84c" stroke-width="1.8"/><circle cx="2" cy="2" r="2" fill="#c9a84c"/><path d="M5 2 Q9 5 9 9 Q5 9 2 5" stroke="#c9a84c" stroke-width="0.6" fill="none"/></svg></div>
+    <div class="corner br"><svg viewBox="0 0 36 36" fill="none"><path d="M2 2 L13 2" stroke="#c9a84c" stroke-width="1.8"/><path d="M2 2 L2 13" stroke="#c9a84c" stroke-width="1.8"/><circle cx="2" cy="2" r="2" fill="#c9a84c"/><path d="M5 2 Q9 5 9 9 Q5 9 2 5" stroke="#c9a84c" stroke-width="0.6" fill="none"/></svg></div>
+
+    <!-- Header -->
+    <div class="card-header">
+        <div class="header-logos">
+            <img class="header-logo"
+                 src="{{ url_for('static', filename='images/School_logo.jpeg') }}"
+                 alt="Logo" onerror="this.style.display='none'">
+        </div>
+        <div class="school-name">GURUKUL <em>AASHRAM</em></div>
+        <div class="school-loc">Ulao, Begusarai, Bihar</div>
+        <div class="gold-rule"></div>
+        <div class="portal-badge">✦ Student Fee Portal ✦</div>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body">
+
+        <div class="search-icon">🧾</div>
+        <div class="card-title">Fee Status Check</div>
+        <div class="card-sub">Apni fees ki jankari dekhein</div>
+
+        <!-- Error message -->
+        {% if error %}
+        <div class="error-msg">❌ &nbsp; {{ error }}</div>
+        {% endif %}
+
+        <!-- Search Form -->
+        <form action="/fee-details" method="POST">
+            <div class="field-group">
+                <label class="field-label">Admission No / Roll No</label>
+                <input type="text" name="student_id"
+                       value="{{ searched_id or '' }}"
+                       placeholder="e.g. GAA/REG/2026/101 ya 101"
+                       required autocomplete="off">
+            </div>
+            <div class="field-group">
+                <label class="field-label">Date of Birth</label>
+                <input type="date" name="dob" required>
+            </div>
+            <button type="submit" class="submit-btn">🔍 &nbsp; View Fee Status</button>
+        </form>
+
+        <!-- Result Section -->
+        {% if result %}
+        <div class="section-divider"></div>
+        <div class="result-section">
+
+            <div class="result-header">✅ &nbsp; Fee Details — {{ result.student.get('Student Name', '') }}</div>
+
+            <!-- Student Info -->
+            <div class="info-grid">
+                <div class="info-cell">
+                    <div class="lbl">Student Name</div>
+                    <div class="val">{{ result.student.get('Student Name', '—') }}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="lbl">Class</div>
+                    <div class="val">{{ result.student.get('Class', '—') }}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="lbl">Reg No</div>
+                    <div class="val" style="font-size:12px;">{{ result.student.get('Reg No', '—') }}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="lbl">Roll No</div>
+                    <div class="val">{{ result.student.get('Roll No', '—') }}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="lbl">Father's Name</div>
+                    <div class="val">{{ result.student.get('Father Name', '—') }}</div>
+                </div>
+                <div class="info-cell">
+                    <div class="lbl">Section</div>
+                    <div class="val">{{ result.student.get('Section', '—') }}</div>
+                </div>
+            </div>
+
+            <!-- Fee Summary -->
+            <div class="fee-summary">
+                <div class="fee-card fc-total">
+                    <div class="fee-lbl">Total Yearly</div>
+                    <div class="fee-val">₹{{ result.total_yearly | int }}</div>
+                </div>
+                <div class="fee-card fc-paid">
+                    <div class="fee-lbl">Total Paid</div>
+                    <div class="fee-val">₹{{ result.paid | int }}</div>
+                </div>
+                <div class="fee-card fc-dues {% if result.dues > 0 %}warn{% else %}ok{% endif %}">
+                    <div class="fee-lbl">Dues</div>
+                    <div class="fee-val">₹{{ result.dues | int }}</div>
+                </div>
+            </div>
+
+            <!-- Payment History -->
+            <div class="result-header" style="margin-top:4px;">📋 &nbsp; Payment History</div>
+            {% if result.history %}
+            <table class="hist-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Month</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for h in result.history %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ h.get('Month', '—') }}</td>
+                        <td>{{ h.get('Date', '—') }}</td>
+                        <td class="amt">₹{{ h.get('Paid Amount', 0) | int }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="no-history">Abhi tak koi payment record nahi mila.</div>
+            {% endif %}
+
+            <div class="info-note">
+                Koi galat jankari ho toh school office se milein.
+                <strong>Ph: Office Number</strong>
+            </div>
+
+        </div>
+        {% endif %}
+
+        <div class="back-row" style="margin-top: 18px;">
+            <a href="/" class="back-link">← Back to Home</a>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        Gurukul Aashram &nbsp;✦&nbsp; Academic Session 2025–26
+    </div>
+
+</div>
+
+</body>
+</html>

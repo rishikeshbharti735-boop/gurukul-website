@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Receipt - Gurukul Aashram</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
+        
+        .receipt-card { 
+            max-width: 450px; 
+            background: white; 
+            border: 2px solid #1c1a76; 
+            padding: 20px; 
+            margin: 10px auto; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            border-radius: 12px;
+        }
+
+        .school-header { text-align: center; border-bottom: 2px solid #1c1a76; padding-bottom: 12px; margin-bottom: 15px; }
+        .school-header h2 { margin: 0; color: #1c1a76; font-size: 1.4rem; }
+        .school-header p { margin: 3px 0; font-size: 0.85rem; font-weight: bold; }
+        
+        .receipt-title { 
+            background: #1c1a76; color: white; display: inline-block; 
+            padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; 
+            font-weight: bold; margin-top: 10px; text-transform: uppercase;
+        }
+
+        /* Aapka Naya Highlight Box */
+        .highlight-box { 
+            background: #fdfae1; 
+            padding: 12px; 
+            border: 1px solid #1c1a76; 
+            margin: 15px 0; 
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .highlight-box div { display: flex; justify-content: space-between; font-size: 0.9rem; }
+
+        .info-section { margin-bottom: 20px; }
+        .info-row { 
+            display: flex; justify-content: space-between; 
+            margin-bottom: 10px; border-bottom: 1px solid #f0f0f0; 
+            padding-bottom: 4px; font-size: 0.9rem;
+        }
+        .label { font-weight: bold; color: #1c1a76; }
+        .val { text-align: right; color: #333; }
+
+        .fee-status {
+            text-align: center; background: #e8f5e9; color: #2e7d32;
+            padding: 8px; border-radius: 5px; font-weight: bold; margin-top: 10px;
+            border: 1px solid #c8e6c9; font-size: 0.9rem;
+        }
+
+        .footer { margin-top: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .seal { font-size: 0.75rem; font-weight: bold; color: #27ae60; border: 2px solid #27ae60; padding: 4px 8px; border-radius: 4px; transform: rotate(-15deg); opacity: 0.6; }
+        .sign { text-align: center; font-size: 0.75rem; font-weight: bold; border-top: 1px solid #333; padding-top: 5px; min-width: 120px; }
+
+        .btn-group { display: flex; gap: 10px; justify-content: center; max-width: 450px; margin: 15px auto; }
+        .btn { 
+            padding: 12px; border: none; border-radius: 6px; 
+            font-weight: bold; cursor: pointer; text-decoration: none; 
+            font-size: 0.85rem; flex: 1; text-align: center;
+        }
+        .btn-print { background: #27ae60; color: white; }
+        .btn-home { background: #1c1a76; color: white; }
+
+        @media print { .btn-group { display: none; } }
+    </style>
+</head>
+<body>
+
+    <div class="receipt-card">
+        <div class="school-header">
+            <img src="{{ url_for('static', filename='images/School_logo.jpeg') }}" alt="Logo" style="height: 50px;">
+            <h2>GURUKUL AASHRAM</h2>
+            <p>ULAO, BEGUSARAI, BIHAR</p>
+            <div class="receipt-title">Registration Receipt (2026-27)</div>
+        </div>
+
+        <div class="highlight-box">
+            <div>
+                <span class="label">REGISTRATION NO:</span> 
+                <span style="color: #d32f2f; font-weight: bold;">{{ s['Reg No'] }}</span>
+            </div>
+            <div>
+                <span class="label">ROLL NUMBER:</span> 
+                <span style="color: #1c1a76; font-weight: bold;">{{ s['Roll No'] }}</span>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-row"><span class="label">Student Name</span> <span class="val">{{ s['Student Name'] }}</span></div>
+            <div class="info-row"><span class="label">Father's Name</span> <span class="val">{{ s['Father Name'] }}</span></div>
+            <div class="info-row"><span class="label">Class</span> <span class="val">{{ s['Class'] }}</span></div>
+            <div class="info-row"><span class="label">Gender</span> <span class="val">{{ s['Gender'] }}</span></div>
+            <div class="info-row"><span class="label">Mobile No.</span> <span class="val">{{ s['Mobile'] }}</span></div>
+        </div>
+
+        <div class="fee-status">
+            ✅ REGISTRATION FEE PAID: ₹100
+        </div>
+
+        <div class="footer">
+            <div class="seal">VERIFIED</div>
+            <div class="sign">
+                Office In-charge
+            </div>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button onclick="window.print()" class="btn btn-print">📥 DOWNLOAD / PRINT</button>
+        <a href="/" class="btn btn-home">🏠 HOME</a>
+    </div>
+
+</body>
+</html>

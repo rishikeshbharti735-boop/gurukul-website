@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Official Marksheet - Gurukul Aashram</title>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Cinzel:wght@400;500;600;700;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0a0a0a; --ink-mid: #2a2a2a; --ink-soft: #555;
+      --gold: #b8973a; --gold-pale: #f9f5e8; --gold-light: #f0e4b8;
+      --rule: #1a1a1a; --navy: #0c1a4a;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    @page { size: A4 portrait; margin: 0; }
+    body {
+      font-family: 'EB Garamond', Georgia, serif;
+      background: #c8bda8;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 24px 16px; min-height: 100vh;
+    }
+
+    .marksheet {
+      width: 210mm; min-height: 297mm;
+      background: #fdfaf2; position: relative;
+      overflow: hidden; box-shadow: 0 8px 48px rgba(0,0,0,0.35);
+    }
+
+    .b-outer { position:absolute;inset:5mm;border:2.5px solid var(--ink);pointer-events:none;z-index:5; }
+    .b-inner { position:absolute;inset:7.5mm;border:0.7px solid var(--ink);pointer-events:none;z-index:5; }
+    .b-band-top { position:absolute;top:5mm;left:5mm;right:5mm;height:4mm;background:repeating-linear-gradient(90deg,var(--ink) 0,var(--ink) 1.5px,transparent 1.5px,transparent 5px);opacity:0.06;pointer-events:none;z-index:4; }
+    .b-band-bot { position:absolute;bottom:5mm;left:5mm;right:5mm;height:4mm;background:repeating-linear-gradient(90deg,var(--ink) 0,var(--ink) 1.5px,transparent 1.5px,transparent 5px);opacity:0.06;pointer-events:none;z-index:4; }
+
+    .corner { position:absolute;width:16mm;height:16mm;z-index:6; }
+    .corner svg { width:100%;height:100%; }
+    .corner-tl { top:3mm;left:3mm; }
+    .corner-tr { top:3mm;right:3mm;transform:scaleX(-1); }
+    .corner-bl { bottom:3mm;left:3mm;transform:scaleY(-1); }
+    .corner-br { bottom:3mm;right:3mm;transform:scale(-1); }
+
+    .watermark {
+      position:absolute;top:50%;left:50%;
+      transform:translate(-50%,-50%) rotate(-30deg);
+      font-family:'Cinzel',serif;font-size:90px;font-weight:900;
+      color:var(--ink);opacity:0.025;white-space:nowrap;
+      pointer-events:none;z-index:1;letter-spacing:10px;
+    }
+
+    .content { position:relative;z-index:10;padding:13mm 15mm 10mm; }
+
+    .header {
+      display:grid;grid-template-columns:20mm 1fr 20mm;
+      align-items:center;gap:5mm;padding-bottom:4mm;
+    }
+    .logo-box img { width:100%;height:auto;object-fit:contain;filter:grayscale(1) contrast(1.2); }
+    .header-center { text-align:center; }
+    .school-name { font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--ink);letter-spacing:4px;line-height:1; }
+    .school-name em { font-style:normal; }
+    .school-address { font-family:'EB Garamond',serif;font-size:11px;color:var(--ink-soft);margin-top:3px;letter-spacing:1.5px;font-style:italic; }
+    .doc-title-band { margin-top:7px;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);padding:4px 0;display:flex;align-items:center;justify-content:center;gap:10px; }
+    .doc-title { font-family:'Cinzel',serif;font-size:10px;font-weight:600;letter-spacing:3px;color:var(--ink);text-transform:uppercase; }
+    .doc-diamond { color:var(--ink);font-size:8px; }
+
+    .rule-double { height:5px;border-top:2px solid var(--ink);border-bottom:0.7px solid var(--ink);margin:4mm 0; }
+    .rule-single { height:1px;background:var(--ink);margin:3mm 0;opacity:0.25; }
+
+    .session-row { display:flex;justify-content:space-between;align-items:center;margin-bottom:3mm; }
+    .session-badge { font-family:'Cinzel',serif;font-size:9px;font-weight:600;letter-spacing:2px;border:1px solid var(--ink);padding:3px 12px;color:var(--ink); }
+    .serial-no { font-family:'EB Garamond',serif;font-size:11px;color:var(--ink-soft);font-style:italic; }
+
+    /* ── STUDENT INFO — now single column since only 2 rows each side ── */
+    .student-block {
+      display:grid;grid-template-columns:1fr 1fr;gap:0 8mm;
+      margin-bottom:4mm;border:1px solid var(--ink);
+    }
+    .student-col { padding:0; }
+    .student-col:first-child { border-right:0.7px solid var(--ink); }
+    .info-row {
+      display:flex;align-items:baseline;
+      padding:5px 8px;border-bottom:0.5px solid rgba(0,0,0,0.12);
+      font-size:12px;
+    }
+    .info-row:last-child { border-bottom:none; }
+    .info-label { font-family:'Cinzel',serif;font-size:8.5px;font-weight:600;letter-spacing:0.8px;color:var(--ink-mid);min-width:80px;text-transform:uppercase;flex-shrink:0; }
+    .info-sep { color:var(--ink);margin:0 5px;font-weight:700;font-size:11px;flex-shrink:0; }
+    .info-val { font-family:'EB Garamond',serif;font-size:13px;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:0.3px;flex:1; }
+
+    .section-heading { font-family:'Cinzel',serif;font-size:10px;font-weight:700;letter-spacing:3px;text-align:center;text-transform:uppercase;color:var(--ink);margin:3mm 0 2mm;display:flex;align-items:center;gap:10px; }
+    .section-heading::before,.section-heading::after { content:'';flex:1;height:1px;background:var(--ink);opacity:0.4; }
+
+    .marks-table { width:100%;border-collapse:collapse;border:1.5px solid var(--ink); }
+    .marks-table thead th { border:1px solid var(--ink);font-family:'Cinzel',serif;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;padding:5px 4px;text-align:center;line-height:1.3; }
+    .marks-table thead tr:first-child th { background:var(--ink);color:#fdfaf2;font-size:10px;letter-spacing:1.5px; }
+    .marks-table thead tr:last-child th { background:#2a2a2a;color:#ddd;font-size:9.5px;letter-spacing:0.5px; }
+    .marks-table tbody td { padding:5px 4px;text-align:center;border:0.7px solid rgba(0,0,0,0.25);font-family:'EB Garamond',serif;font-size:12.5px;color:var(--ink); }
+    .marks-table tbody tr:nth-child(even) td { background:rgba(0,0,0,0.025); }
+    .marks-table tbody td:first-child { text-align:left;padding-left:8px;font-family:'EB Garamond',serif;font-size:13px;font-weight:700;letter-spacing:0.2px; }
+    .marks-table tbody td.tot-col { font-weight:800;font-size:14px;background:rgba(0,0,0,0.07)!important;border:1.5px solid var(--ink)!important; }
+
+    .summary-bar { border:2px solid var(--ink);border-top:none;display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr 1px 1fr;margin-bottom:4mm; }
+    .sum-item { padding:8px 6px;text-align:center; }
+    .sum-divider { background:var(--ink);opacity:0.3; }
+    .sum-label { font-family:'Cinzel',serif;font-size:7.5px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:3px; }
+    .sum-val { font-family:'EB Garamond',serif;font-size:20px;font-weight:800;color:var(--ink);line-height:1; }
+    .sum-val small { font-size:11px;font-weight:400;color:var(--ink-soft); }
+
+    .stamp-wrap { display:flex;align-items:center;justify-content:center;padding:4px 0; }
+    .result-stamp { font-family:'Cinzel',serif;font-size:14px;font-weight:900;padding:3px 18px;letter-spacing:5px;border:2.5px solid;transform:rotate(-5deg);display:inline-block; }
+    .stamp-pass { color:#1a1a1a;border-color:#1a1a1a; }
+    .stamp-fail { color:#1a1a1a;border-color:#1a1a1a; }
+
+    .remarks-row { border:1px solid var(--ink);border-top:none;padding:5px 10px;display:flex;gap:8px;align-items:baseline;margin-bottom:4mm; }
+    .remarks-label { font-family:'Cinzel',serif;font-size:8.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ink-mid);flex-shrink:0; }
+    .remarks-line { flex:1;border-bottom:0.7px solid rgba(0,0,0,0.3); }
+
+    .signatures { display:flex;justify-content:space-between;align-items:flex-end;margin-top:3mm;padding-top:3mm;border-top:1px solid rgba(0,0,0,0.25); }
+    .sign-block { text-align:center;width:44mm; }
+    .sign-space { height:22px; }
+    .sign-line { width:100%;height:1px;background:var(--ink);margin-bottom:4px; }
+    .sign-title { font-family:'Cinzel',serif;font-size:9px;font-weight:600;color:var(--ink);letter-spacing:1.5px;text-transform:uppercase; }
+    .sign-sub { font-family:'EB Garamond',serif;font-size:9px;color:var(--ink-soft);font-style:italic; }
+    .seal-box { width:20mm;height:20mm;border:1.5px dashed rgba(0,0,0,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center; }
+    .seal-text { font-family:'Cinzel',serif;font-size:7px;color:#aaa;text-align:center;letter-spacing:0.5px; }
+
+    .sheet-footer { position:absolute;bottom:0;left:0;right:0;background:var(--ink);color:#fdfaf2;text-align:center;padding:5px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:2.5px;z-index:10; }
+
+    .print-wrap { text-align:center;padding:20px; }
+    .print-btn { padding:13px 48px;background:var(--ink);color:#fdfaf2;border:2px solid var(--ink);font-family:'Cinzel',serif;font-size:13px;font-weight:600;letter-spacing:2px;cursor:pointer;transition:all 0.25s; }
+    .print-btn:hover { background:transparent;color:var(--ink); }
+
+    @media print {
+      body { background:white!important;padding:0!important; }
+      .no-print { display:none!important; }
+      .marksheet { width:210mm!important;min-height:297mm!important;box-shadow:none!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important; }
+    }
+    @media screen and (max-width:640px) {
+      body { padding:5px; }
+      .marksheet { width:100%;min-height:auto; }
+      .school-name { font-size:16px;letter-spacing:2px; }
+      .student-block { grid-template-columns:1fr; }
+      .student-col:first-child { border-right:none;border-bottom:0.7px solid var(--ink); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="marksheet">
+  <div class="watermark">GURUKUL</div>
+  <div class="b-outer"></div>
+  <div class="b-inner"></div>
+  <div class="b-band-top"></div>
+  <div class="b-band-bot"></div>
+
+  <div class="corner corner-tl"><svg viewBox="0 0 55 55" fill="none"><path d="M2 2 L42 2" stroke="#0a0a0a" stroke-width="2.5"/><path d="M2 2 L2 42" stroke="#0a0a0a" stroke-width="2.5"/><circle cx="2" cy="2" r="3.5" fill="#0a0a0a"/><path d="M12 2 Q22 12 22 22 Q12 22 2 12" stroke="#0a0a0a" stroke-width="0.8" fill="none"/></svg></div>
+  <div class="corner corner-tr"><svg viewBox="0 0 55 55" fill="none"><path d="M2 2 L42 2" stroke="#0a0a0a" stroke-width="2.5"/><path d="M2 2 L2 42" stroke="#0a0a0a" stroke-width="2.5"/><circle cx="2" cy="2" r="3.5" fill="#0a0a0a"/><path d="M12 2 Q22 12 22 22 Q12 22 2 12" stroke="#0a0a0a" stroke-width="0.8" fill="none"/></svg></div>
+  <div class="corner corner-bl"><svg viewBox="0 0 55 55" fill="none"><path d="M2 2 L42 2" stroke="#0a0a0a" stroke-width="2.5"/><path d="M2 2 L2 42" stroke="#0a0a0a" stroke-width="2.5"/><circle cx="2" cy="2" r="3.5" fill="#0a0a0a"/><path d="M12 2 Q22 12 22 22 Q12 22 2 12" stroke="#0a0a0a" stroke-width="0.8" fill="none"/></svg></div>
+  <div class="corner corner-br"><svg viewBox="0 0 55 55" fill="none"><path d="M2 2 L42 2" stroke="#0a0a0a" stroke-width="2.5"/><path d="M2 2 L2 42" stroke="#0a0a0a" stroke-width="2.5"/><circle cx="2" cy="2" r="3.5" fill="#0a0a0a"/><path d="M12 2 Q22 12 22 22 Q12 22 2 12" stroke="#0a0a0a" stroke-width="0.8" fill="none"/></svg></div>
+
+  <div class="content">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="logo-box">
+        <img src="{{ url_for('static', filename='images/School_logo.jpeg') }}" alt="School Logo" onerror="this.style.display='none'">
+      </div>
+      <div class="header-center">
+        <div class="school-name">GURUKUL <em>AASHRAM</em></div>
+        <div class="school-address">Ulao, Begusarai, Bihar &nbsp;|&nbsp; Estd. 2001</div>
+        <div class="doc-title-band">
+          <span class="doc-diamond">◆</span>
+          <span class="doc-title">Annual Progress Report &nbsp; 2025–26</span>
+          <span class="doc-diamond">◆</span>
+        </div>
+      </div>
+      <div class="logo-box" style="text-align:right;">
+        <img src="{{ url_for('static', filename='images/Cbse_logo.png') }}" alt="CBSE Logo" onerror="this.style.display='none'">
+      </div>
+    </div>
+
+    <div class="rule-double"></div>
+
+    <!-- SESSION + SERIAL -->
+    <div class="session-row">
+      <div class="session-badge">SESSION : 2025 – 26</div>
+      <div class="serial-no">Sl. No. ___________</div>
+      <div class="session-badge">EXAMINATION : ANNUAL</div>
+    </div>
+
+    <!-- STUDENT INFO — Mother aur DOB hataye gaye ── -->
+    <div class="student-block">
+      <div class="student-col">
+        <div class="info-row">
+          <span class="info-label">Student</span>
+          <span class="info-sep">:</span>
+          <span class="info-val">{{ s.get('Student Name') or s.get('student_name') or '---' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Father</span>
+          <span class="info-sep">:</span>
+          <span class="info-val">{{ s.get('Father Name') or s.get('father_name') or s.get('Father') or '---' }}</span>
+        </div>
+      </div>
+      <div class="student-col">
+        <div class="info-row">
+          <span class="info-label">Roll No.</span>
+          <span class="info-sep">:</span>
+          <span class="info-val">{{ s.get('Roll No') or s.get('roll_no') or '---' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Class</span>
+          <span class="info-sep">:</span>
+          <span class="info-val">{{ s.get('Class') or s.get('class') or '---' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARKS TABLE -->
+    <div class="section-heading">Academic Performance</div>
+
+    <table class="marks-table">
+      <thead>
+        <tr>
+          <th rowspan="2" style="width:38%;text-align:left;padding-left:8px;">Subject</th>
+          <th colspan="2">Maximum Marks</th>
+          <th colspan="3">Marks Obtained</th>
+        </tr>
+        <tr>
+          <th>Theory</th><th>Practical</th>
+          <th>Theory</th><th>Practical</th><th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in s.marks_list %}
+        <tr>
+          <td>{{ m.name }}</td>
+          <td>{{ m.t_max }}</td>
+          <td>{{ m.p_max }}</td>
+          <td>{{ m.t_ob }}</td>
+          <td>{{ m.p_ob }}</td>
+          <td class="tot-col">{{ m.tot_ob }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- SUMMARY BAR -->
+    {% set pass_val = (s.total_marks / s.max_total) if s.max_total > 0 else 0 %}
+    <div class="summary-bar">
+      <div class="sum-item">
+        <div class="sum-label">Grand Total</div>
+        <div class="sum-val">{{ s.total_marks }} <small>/ {{ s.max_total }}</small></div>
+      </div>
+      <div class="sum-divider"></div>
+      <div class="sum-item">
+        <div class="sum-label">Percentage</div>
+        <div class="sum-val">{{ s.percent }}</div>
+      </div>
+      <div class="sum-divider"></div>
+      <div class="sum-item">
+        <div class="sum-label">Division</div>
+        <div class="sum-val" style="font-size:15px;">
+          {% if pass_val >= 0.60 %}FIRST{% elif pass_val >= 0.45 %}SECOND{% elif pass_val >= 0.33 %}THIRD{% else %}---{% endif %}
+        </div>
+      </div>
+      <div class="sum-divider"></div>
+      <div class="sum-item">
+        <div class="sum-label">Result</div>
+        <div class="stamp-wrap">
+          {% if pass_val >= 0.33 %}
+          <div class="result-stamp stamp-pass">PASS</div>
+          {% else %}
+          <div class="result-stamp stamp-fail">FAIL</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- REMARKS -->
+    <div class="remarks-row">
+      <span class="remarks-label">Remarks</span>
+      <div class="remarks-line"></div>
+      <div class="remarks-line"></div>
+    </div>
+
+    <!-- SIGNATURES -->
+    <div class="signatures">
+      <div class="sign-block">
+        <div class="sign-space"></div>
+        <div class="sign-line"></div>
+        <div class="sign-title">Class Teacher</div>
+        <div class="sign-sub">Signature &amp; Date</div>
+      </div>
+      <div style="text-align:center;">
+        <div class="seal-box"><div class="seal-text">OFFICIAL<br>SEAL</div></div>
+      </div>
+      <div class="sign-block">
+        <div class="sign-space"></div>
+        <div class="sign-line"></div>
+        <div class="sign-title">Principal</div>
+        <div class="sign-sub">Signature &amp; Date</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sheet-footer">
+    GURUKUL AASHRAM, ULAO, BEGUSARAI, BIHAR &nbsp;◆&nbsp; COMPUTER GENERATED MARKSHEET
+  </div>
+</div>
+
+<div class="print-wrap no-print">
+  <button class="print-btn" onclick="window.print()">&#128438; &nbsp; PRINT / SAVE AS PDF &nbsp; (A4)</button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Receipt - {{ s['Student Name'] }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:wght@500;600;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0d1b4b;
+            --navy-mid: #1e3575;
+            --gold: #c9a84c;
+            --gold-light: #f5e6bb;
+            --gold-pale: #fdf8ed;
+            --green: #1b5e20;
+            --green-mid: #2e7d32;
+            --red: #c62828;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @page { size: A4; margin: 0; }
+
+        body {
+            font-family: 'Crimson Text', Georgia, serif;
+            background: #d4c5a9;
+            min-height: 100vh;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* ── RECEIPT CARD ── */
+        .receipt {
+            width: 680px;
+            background: var(--gold-pale);
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 0 5px rgba(201,168,76,0.12), 0 12px 40px rgba(0,0,0,0.25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Watermark */
+        .receipt::after {
+            content: 'GURUKUL';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-family: 'Playfair Display', serif;
+            font-size: 90px;
+            font-weight: 900;
+            color: var(--gold);
+            opacity: 0.035;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Diagonal texture */
+        .receipt::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                45deg, transparent, transparent 30px,
+                rgba(201,168,76,0.025) 30px, rgba(201,168,76,0.025) 31px
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Corner ornaments */
+        .corner { position: absolute; width: 40px; height: 40px; pointer-events: none; z-index: 3; }
+        .corner.tl { top: -1px; left: -1px; }
+        .corner.tr { top: -1px; right: -1px; transform: scaleX(-1); }
+        .corner.bl { bottom: -1px; left: -1px; transform: scaleY(-1); }
+        .corner.br { bottom: -1px; right: -1px; transform: scale(-1); }
+
+        /* ── HEADER ── */
+        .receipt-header {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+            border-bottom: 3px solid var(--gold);
+            padding: 20px 28px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-logo {
+            height: 62px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.35));
+        }
+
+        .header-center { text-align: center; flex: 1; }
+
+        .school-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--gold-light);
+            letter-spacing: 3px;
+        }
+        .school-name em { color: var(--gold); font-style: normal; }
+
+        .school-loc {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 10px;
+            color: rgba(245,230,187,0.6);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .school-reg {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9px;
+            color: rgba(245,230,187,0.4);
+            letter-spacing: 1px;
+            margin-top: 2px;
+            font-style: italic;
+        }
+
+        .gold-rule {
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 8px 40px 0;
+        }
+
+        .receipt-badge {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--navy);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 3px 18px;
+            margin-top: 10px;
+            clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0% 50%);
+        }
+
+        /* ── RECEIPT ID BAND ── */
+        .receipt-id-band {
+            background: rgba(201,168,76,0.12);
+            border-bottom: 1px solid rgba(201,168,76,0.3);
+            padding: 7px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .receipt-id-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--navy);
+            opacity: 0.7;
+        }
+
+        .receipt-id-val {
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--navy);
+            letter-spacing: 1px;
+        }
+
+        /* ── BODY ── */
+        .receipt-body {
+            padding: 22px 28px 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-section {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Photo */
+        .photo-col { flex-shrink: 0; text-align: center; }
+
+        .photo-frame {
+            width: 120px;
+            height: 145px;
+            border: 2px solid var(--gold);
+            background: white;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-frame::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 2px solid rgba(201,168,76,0.25);
+            pointer-events: none;
+        }
+
+        .photo-id {
+            margin-top: 8px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--navy);
+            opacity: 0.6;
+            text-transform: uppercase;
+        }
+
+        .photo-id-val {
+            font-family: 'Playfair Display', serif;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--navy);
+            letter-spacing: 0.5px;
+        }
+
+        /* Info rows */
+        .info-col { flex: 1; }
+
+        .info-row {
+            display: flex;
+            align-items: baseline;
+            padding: 6px 0;
+            border-bottom: 0.5px dotted #d4bb7a;
+            gap: 8px;
+        }
+        .info-row:last-child { border-bottom: none; }
+
+        .info-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--navy);
+            opacity: 0.6;
+            min-width: 110px;
+            flex-shrink: 0;
+        }
+
+        .info-val {
+            font-family: 'Crimson Text', serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a2e;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            flex: 1;
+        }
+
+        .fee-val {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--green-mid);
+            letter-spacing: 0.5px;
+        }
+
+        /* ── VERIFIED STRIP ── */
+        .verified-strip {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #e8f5e9, #f1fff3);
+            border: 1px solid #a5d6a7;
+            padding: 9px 20px;
+            margin-bottom: 20px;
+        }
+
+        .verified-icon { font-size: 18px; }
+
+        .verified-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--green);
+        }
+
+        /* ── FOOTER ── */
+        .receipt-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-top: 14px;
+            border-top: 1px solid rgba(201,168,76,0.4);
+        }
+
+        .sign-block { text-align: center; }
+
+        .sign-line {
+            width: 130px;
+            height: 1px;
+            background: var(--navy);
+            margin-bottom: 4px;
+        }
+
+        .sign-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--navy);
+            opacity: 0.6;
+        }
+
+        .seal-wrap { text-align: center; }
+
+        .seal-circle {
+            width: 64px;
+            height: 64px;
+            border: 2px dotted var(--red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-12deg);
+            margin: 0 auto 4px;
+        }
+
+        .seal-inner {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 7px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--red);
+            text-align: center;
+            line-height: 1.4;
+            opacity: 0.7;
+        }
+
+        .seal-label {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--green-mid);
+            text-transform: uppercase;
+        }
+
+        .principal-sign {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 26px;
+            color: var(--navy);
+            opacity: 0.6;
+            margin-bottom: -4px;
+            height: 30px;
+        }
+
+        /* ── CARD FOOTER BAR ── */
+        .card-footer {
+            background: var(--navy);
+            border-top: 2px solid var(--gold);
+            padding: 7px 20px;
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9px;
+            color: rgba(201,168,76,0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ── BUTTONS ── */
+        .btn-group { display: flex; gap: 12px; align-items: center; }
+
+        .action-btn {
+            padding: 11px 28px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+
+        .btn-print  { background: var(--green-mid); color: white; }
+        .btn-admin  { background: var(--navy); color: var(--gold-light); border: 1px solid rgba(201,168,76,0.3); }
+        .btn-home   { background: #666; color: white; }
+
+        .action-btn:hover { opacity: 0.88; letter-spacing: 3px; }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--navy);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .back-link:hover { opacity: 1; }
+
+        @media print {
+            body { background: white; padding: 0; gap: 0; }
+            .no-print { display: none !important; }
+            .receipt {
+                box-shadow: none;
+                width: 100%;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        @media screen and (max-width: 700px) {
+            .receipt { width: 100%; }
+            .main-section { flex-direction: column; align-items: center; }
+            .photo-col { width: 100%; }
+            .btn-group { flex-direction: column; width: 100%; }
+            .action-btn { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<a href="/" class="back-link no-print">← Back to Dashboard</a>
+
+<div class="receipt">
+
+    <!-- Corners -->
+    <div class="corner tl"><svg viewBox="0 0 40 40" fill="none"><path d="M2 2 L14 2" stroke="#c9a84c" stroke-width="1.8"/><path d="M2 2 L2 14" stroke="#c9a84c" stroke-width="1.8"/><circle cx="2" cy="2" r="2" fill="#c9a84c"/><path d="M6 2 Q10 6 10 10 Q6 10 2 6" stroke="#c9a84c" stroke-width="0.6" fill="none"/></svg></div>
+    <div class="corner tr"><svg viewBox="0 0 40 40" fill="none"><path d="M2 2 L14 2" stroke="#c9a84c" stroke-width="1.8"/><path d="M2 2 L2 14" stroke="#c9a84c" stroke-width="1.8"/><circle cx="2" cy="2" r="2" fill="#c9a84c"/><path d="M6 2 Q10 6 10 10 Q6 10 2 6" stroke="#c9a84c" stroke-width="0.6" fill="none"/></svg></div>
+    <div class="corner bl"><svg viewBox="0 0 40 40" fill="none"><path d="M2 2 L14 2" stroke="#c9a84c" stroke-width="1.8"/><path d="M2 2 L2 14" stroke="#c9a84c" stroke-width="1.8"/><circle cx="2" cy="2" r="2" fill="#c9a84c"/><path d="M6 2 Q10 6 10 10 Q6 10 2 6" stroke="#c9a84c" stroke-width="0.6" fill="none"/></svg></div>
+    <div class="corner br"><svg viewBox="0 0 40 40" fill="none"><path d="M2 2 L14 2" stroke="#c9a84c" stroke-width="1.8"/><path d="M2 2 L2 14" stroke="#c9a84c" stroke-width="1.8"/><circle cx="2" cy="2" r="2" fill="#c9a84c"/><path d="M6 2 Q10 6 10 10 Q6 10 2 6" stroke="#c9a84c" stroke-width="0.6" fill="none"/></svg></div>
+
+    <!-- Header -->
+    <div class="receipt-header">
+        <img class="header-logo"
+             src="{{ url_for('static', filename='images/School_logo.jpeg') }}"
+             alt="Logo" onerror="this.style.display='none'">
+        <div class="header-center">
+            <div class="school-name">GURUKUL <em>AASHRAM</em></div>
+            <div class="school-loc">Ulao, Begusarai, Bihar</div>
+            <div class="school-reg">Trust Reg. No: 2026-GAA</div>
+            <div class="gold-rule"></div>
+            <div class="receipt-badge">✦ Admission Receipt — 2026-27 ✦</div>
+        </div>
+        <img class="header-logo"
+             src="{{ url_for('static', filename='images/Cbse_logo.png') }}"
+             alt="CBSE" onerror="this.style.display='none'">
+    </div>
+
+    <!-- Receipt ID Band -->
+    <div class="receipt-id-band">
+        <span class="receipt-id-text">Student ID</span>
+        <span class="receipt-id-val">{{ s['Student ID'] }}</span>
+        <span class="receipt-id-text">Admission Date</span>
+        <span class="receipt-id-val">{{ s['Date'] }}</span>
+    </div>
+
+    <div class="receipt-body">
+
+        <!-- Main content: photo + details -->
+        <div class="main-section">
+
+            <!-- Photo -->
+            <div class="photo-col">
+                <div class="photo-frame">
+                    <img src="{{ url_for('static', filename='uploads/' + s['Photo Path']) }}"
+                         alt="Student Photo"
+                         onerror="this.src='https://placehold.co/120x145/fdf8ed/0d1b4b?text=Photo'">
+                </div>
+                <div style="margin-top: 8px;">
+                    <div class="photo-id">Student ID</div>
+                    <div class="photo-id-val">{{ s['Student ID'] }}</div>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="info-col">
+                <div class="info-row">
+                    <span class="info-label">Student Name</span>
+                    <span class="info-val">{{ s['Student Name'] }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Father's Name</span>
+                    <span class="info-val">{{ s['Father'] }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Mother's Name</span>
+                    <span class="info-val">{{ s.get('Mother', '—') }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Class</span>
+                    <span class="info-val">{{ s['Class'] }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Date of Birth</span>
+                    <span class="info-val">{{ s['DOB'] }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Mobile No.</span>
+                    <span class="info-val">{{ s['Mobile'] }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Fee Received</span>
+                    <span class="fee-val">₹{{ s['Paid'] }}</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Verified Strip -->
+        <div class="verified-strip">
+            <span class="verified-icon">✅</span>
+            <span class="verified-text">Admission Verified & Confirmed for Session 2026–27</span>
+        </div>
+
+        <!-- Signature Row -->
+        <div class="receipt-footer-row">
+            <div class="sign-block">
+                <div style="height: 22px;"></div>
+                <div class="sign-line"></div>
+                <div class="sign-title">Parent / Guardian</div>
+            </div>
+
+            <div class="seal-wrap">
+                <div class="seal-circle">
+                    <div class="seal-inner">GURUKUL<br>AASHRAM<br>OFFICIAL<br>SEAL</div>
+                </div>
+                <div class="seal-label">Official Seal</div>
+            </div>
+
+            <div class="sign-block">
+                <div class="principal-sign">Principal</div>
+                <div class="sign-line"></div>
+                <div class="sign-title">Authorized Signature</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card-footer">
+        Gurukul Aashram, Ulao, Begusarai, Bihar &nbsp;✦&nbsp; This is a computer-generated receipt
+    </div>
+
+</div>
+
+<!-- Action Buttons -->
+<div class="btn-group no-print">
+    <button onclick="window.print()" class="action-btn btn-print">📥 &nbsp; Print Receipt</button>
+    <a href="/admin_portal" class="action-btn btn-admin">⚙ &nbsp; Admin Portal</a>
+    <a href="/" class="action-btn btn-home">🏠 &nbsp; Home</a>
+</div>
+
+</body>
+</html>
